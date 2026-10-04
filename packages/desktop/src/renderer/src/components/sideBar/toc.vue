@@ -120,7 +120,7 @@ const handleClick = (data: { slug?: unknown }): void => {
 
 <style>
 .side-bar-toc {
-  height: calc(100% - 35px);
+  height: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -130,16 +130,23 @@ const handleClick = (data: { slug?: unknown }): void => {
 }
 
 .side-bar-toc .title {
-  color: var(--sideBarTitleColor);
-  font-weight: 600;
-  font-size: 16px;
-  margin: 37px 0 10px 0;
-  padding-left: 25px;
+  /* The top margin keeps the heading clear of the title bar overlaying the sidebar. */
+  margin: var(--titleBarHeight) 0 0;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 12px;
   flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sideBarTextColor);
 }
 
-.side-bar-toc .el-tree-node {
-  margin-top: 8px;
+.side-bar-toc .el-tree-node__content {
+  height: 28px;
+  margin: 1px 6px;
+  border-radius: var(--chromeRadius);
 }
 
 /* The outline scrolls, the panel title does not — same split the file tree
@@ -147,8 +154,10 @@ const handleClick = (data: { slug?: unknown }): void => {
 .side-bar-toc .el-tree {
   background: transparent;
   color: var(--sideBarColor);
+  font-size: 13px;
   flex: 1;
   min-height: 0;
+  padding-bottom: 12px;
 }
 
 /* Element Plus wraps every tree label in an `<el-text>`, which sets a color of
@@ -166,18 +175,19 @@ const handleClick = (data: { slug?: unknown }): void => {
 }
 
 .side-bar-toc .el-tree-node:focus > .el-tree-node__content {
-  background-color: var(--sideBarItemHoverBgColor);
+  background-color: var(--chromeHoverBgColor);
 }
 
 .side-bar-toc .el-tree-node__content:hover {
-  background: var(--sideBarItemHoverBgColor);
+  background: var(--chromeHoverBgColor);
 }
 
 /* Element Plus paints `.is-current` from a selector carrying
    `.el-tree--highlight-current`, so overriding it needs that class too. */
 .side-bar-toc .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: var(--sideBarItemHoverBgColor);
+  background-color: var(--chromeActiveBgColor);
   color: var(--themeColor);
+  font-weight: 500;
 }
 
 .side-bar-toc > li {
@@ -196,7 +206,9 @@ const handleClick = (data: { slug?: unknown }): void => {
 .side-bar-toc-wordwrap .el-tree-node__content {
   white-space: normal;
   height: auto;
-  min-height: 26px;
+  min-height: 28px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 /* Element Plus renders every label as `<el-text truncated>`, which declares

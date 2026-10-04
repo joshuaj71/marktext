@@ -3,7 +3,7 @@
     <div
       v-if="showTitleBar"
       class="title-bar-editor-bg"
-      :class="{ 'tabs-visible': showTabBar }"
+      :class="{ 'tabs-visible': showTabBar, 'tabs-in-title-bar': tabsInTitleBar }"
     />
     <div
       v-if="showTitleBar"
@@ -11,6 +11,7 @@
       :class="[
         { active: active },
         { 'tabs-visible': showTabBar },
+        { 'tabs-in-title-bar': tabsInTitleBar },
         { frameless: titleBarStyle === 'custom' },
         { isOsx: isOsx }
       ]"
@@ -30,15 +31,8 @@
               <span
                 v-for="(path, index) of paths"
                 :key="index"
-              >
-                {{ path }}
-                <el-icon
-                  class="path-arrow"
-                  :size="12"
-                >
-                  <ArrowRight />
-                </el-icon>
-              </span>
+                class="path-segment"
+              >{{ path }}</span>
               <span
                 class="filename"
                 :class="{ isOsx: platform === 'darwin' }"
@@ -56,7 +50,14 @@
           class="frameless-titlebar-menu title-no-drag"
           @click.stop="handleMenuClick"
         >
-          <span class="text-center-vertical">&#9776;</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" />
+          </svg>
         </div>
         <el-tooltip
           v-if="wordCount"
@@ -154,10 +155,9 @@ import { storeToRefs } from 'pinia'
 import { minimizePath, restorePath, maximizePath, closePath } from '../../assets/window-controls.js'
 import { PATH_SEPARATOR } from '../../config'
 import { isMac as isOsxPlatform } from '@/util'
-import { shouldShowInAppTitleBar } from './visibility'
+import { shouldShowInAppTitleBar, tabsShareTitleBarRow } from './visibility'
 import { useEditorStore } from '@/store/editor'
 import { useI18n } from 'vue-i18n'
-import { ArrowRight } from '@element-plus/icons-vue'
 import type { FileWordCount } from '@shared/types/files'
 
 interface ProjectInfo {
@@ -239,6 +239,11 @@ const formatCountPair = (key: keyof FileWordCount) => {
 
 const showTitleBar = computed(() => {
   return shouldShowInAppTitleBar(titleBarStyle.value, isOsx)
+})
+
+const tabsInTitleBar = computed(() => {
+  const hasOpenFile = editorStore.currentFile?.markdown !== undefined
+  return tabsShareTitleBarRow(showTitleBar.value, showTabBar.value, hasOpenFile)
 })
 
 watch(
@@ -335,11 +340,17 @@ onBeforeUnmount(() => {
 <style scoped>
 .title-bar-editor-bg {
   height: var(--titleBarHeight);
+  flex-shrink: 0;
   background: var(--editorBgColor);
   position: relative;
   left: 0;
   top: 0;
   right: 0;
+}
+/* The tab strip takes over this row, so the spacer that normally reserves it
+   must not push the tabs down. */
+.title-bar-editor-bg.tabs-in-title-bar {
+  display: none;
 }
 .title-bar {
   -webkit-app-region: drag;
@@ -347,6 +358,7 @@ onBeforeUnmount(() => {
   background: transparent;
   height: var(--titleBarHeight);
   box-sizing: border-box;
+  font-family: var(--uiFontFamily);
   color: var(--editorColor50);
   position: fixed;
   left: 0;
@@ -355,6 +367,19 @@ onBeforeUnmount(() => {
   z-index: 2;
   transition: color 0.4s ease-in-out;
   cursor: default;
+}
+/* This bar overlays the tab strip. It stays a window drag region (the tabs opt
+   out with no-drag), but must not swallow the clicks meant for the tabs. */
+.title-bar.tabs-in-title-bar {
+  pointer-events: none;
+  & .title > span {
+    visibility: hidden;
+  }
+  & .left-toolbar,
+  & .right-toolbar,
+  & .word-count {
+    pointer-events: auto;
+  }
 }
 .active {
   color: var(--editorColor);
@@ -365,10 +390,10 @@ img {
   vertical-align: top;
 }
 .title {
-  padding: 0 142px;
+  padding: 0 148px;
   height: 100%;
   line-height: var(--titleBarHeight);
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
   transition: all 0.25s ease-in-out;
   & .filename {
@@ -408,37 +433,44 @@ div.title > span > .path > bdi > span {
   unicode-bidi: isolate;
 }
 
+.path-segment {
+  color: var(--editorColor40);
+}
+/* Generated content, so a segment's text stays exactly the folder name. */
+.path-segment::after {
+  content: '/';
+  margin: 0 6px;
+  color: var(--editorColor30);
+}
+
 .title-bar .title .filename.isOsx:hover {
   color: var(--themeColor);
 }
 
 .active .save-dot {
   flex: none;
-  margin-right: 0.25rem;
-  width: 8px;
-  height: 8px;
+  align-self: center;
+  margin-right: 6px;
+  width: 6px;
+  height: 6px;
   display: inline-block;
   border-radius: 50%;
   background: var(--highlightThemeColor);
-  opacity: 0.7;
   visibility: hidden;
 }
 .active .save-dot.show {
   visibility: visible;
 }
-.title:hover {
-  color: var(sideBarTitleColor);
-}
 
 .left-toolbar {
-  padding: 0 10px;
+  padding: 0 6px;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 118px; /* + 2*10px padding*/
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .right-toolbar {
   height: 100%;
@@ -459,23 +491,28 @@ div.title > span > .path > bdi > span {
   margin: 2px 0 4px;
 }
 
+/* Pinned to the window's bottom-right corner like a status readout, so the
+   title bar row holds nothing but the menu button, the title or tabs, and the
+   window controls. */
 .word-count {
   -webkit-app-region: no-drag;
+  position: fixed;
+  right: 20px;
+  bottom: 10px;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--editorColor30);
-  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--editorColor40);
   line-height: 24px;
-  padding: 0 5px;
-  box-sizing: border-box;
-  transition: all 0.25s ease-in-out;
-  & > .text-center-vertical {
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-  &:hover > span {
-    background: var(--sideBarBgColor);
-    color: var(--sideBarTitleColor);
+  padding: 0 8px;
+  border-radius: var(--chromeRadius);
+  background: color-mix(in srgb, var(--editorBgColor) 88%, transparent);
+  transition:
+    color 0.15s ease-in-out,
+    background 0.15s ease-in-out;
+  &:hover {
+    color: var(--editorColor);
+    background: color-mix(in srgb, var(--editorColor) 7%, var(--editorBgColor));
   }
 }
 
@@ -497,17 +534,33 @@ div.title > span > .path > bdi > span {
   transform: translateX(-50%) translateY(-50%);
 }
 .frameless-titlebar-menu {
-  color: var(--sideBarColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  border-radius: var(--chromeRadius);
+  color: var(--sideBarIconColor);
+  & svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+  }
+  &:hover {
+    background: var(--chromeHoverBgColor);
+    color: var(--editorColor);
+  }
 }
 .frameless-titlebar-close:hover {
-  background-color: rgb(228, 79, 79);
+  background-color: #e5484d;
 }
 .frameless-titlebar-minimize:hover,
 .frameless-titlebar-toggle:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--chromeHoverBgColor);
 }
 .frameless-titlebar-button svg {
-  fill: #000000;
+  fill: var(--editorColor);
 }
 .frameless-titlebar-close:hover svg {
   fill: #ffffff;

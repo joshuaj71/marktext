@@ -162,29 +162,33 @@ onUnmounted(() => {
   -webkit-app-region: drag;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   background: var(--sideBarBgColor);
+  border-right: 1px solid var(--chromeBorderColor);
   width: var(--prefSideBarWidth);
   height: 100vh;
-  padding-top: 24px;
+  padding-top: 22px;
   box-sizing: border-box;
   & h3 {
     margin: 0;
-    font-size: 20px;
-    font-weight: normal;
-    text-align: center;
-    color: var(--sideBarColor);
+    padding: 0 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--sideBarTitleColor);
   }
 }
 .search-wrapper {
   -webkit-app-region: no-drag;
-  padding: 0 16px;
-  margin: 18px 0;
+  padding: 0 10px;
+  margin: 14px 0 10px;
 }
 .el-autocomplete {
   width: 100%;
 
   & .el-input__wrapper {
-    background: transparent;
+    background: var(--editorBgColor);
+    border-radius: var(--chromeRadius);
+    box-shadow: 0 0 0 1px var(--chromeBorderColor) inset;
   }
 
   & .el-input__inner {
@@ -228,12 +232,14 @@ onUnmounted(() => {
 .category {
   -webkit-app-region: no-drag;
   overflow-y: auto;
+  padding: 0 6px 12px;
   & .item {
-    width: 100%;
-    height: 38px;
-    font-size: 16px;
+    height: 32px;
+    margin: 2px 0;
+    font-size: 14px;
     color: var(--sideBarColor);
-    padding-left: 16px;
+    padding: 0 10px;
+    border-radius: var(--chromeRadius);
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -241,36 +247,24 @@ onUnmounted(() => {
     cursor: pointer;
     position: relative;
     user-select: none;
+    transition: background 0.15s ease-in-out;
     & > svg {
-      width: 18px;
-      height: 18px;
-      color: var(--sideBarColor);
-      margin-right: 12px;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--sideBarIconColor);
+      margin-right: 10px;
+    }
+    &:hover {
+      background: var(--chromeHoverBgColor);
+    }
+    &.active {
+      background: var(--chromeActiveBgColor);
+      color: var(--sideBarTitleColor);
+      font-weight: 500;
     }
     &.active > svg {
       color: var(--sideBarTitleColor);
-    }
-    &:hover {
-      background: var(--sideBarItemHoverBgColor);
-    }
-    &::before {
-      content: '';
-      width: 4px;
-      height: 0;
-      background: var(--highlightThemeColor);
-      position: absolute;
-      left: 0;
-      border-top-right-radius: 3px;
-      border-bottom-right-radius: 3px;
-      transition: height 0.25s ease-in-out;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    &.active {
-      color: var(--sideBarTitleColor);
-    }
-    &.active::before {
-      height: 100%;
     }
   }
 }

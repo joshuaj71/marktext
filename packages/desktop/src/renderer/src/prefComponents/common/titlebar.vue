@@ -60,11 +60,11 @@ const handleCloseClick = () => {
 }
 
 .frameless-titlebar-close:hover {
-  background-color: rgb(228, 79, 79);
+  background-color: #e5484d;
 }
 
 .frameless-titlebar-button svg {
-  fill: #000000;
+  fill: var(--editorColor);
 }
 
 .frameless-titlebar-close:hover svg {

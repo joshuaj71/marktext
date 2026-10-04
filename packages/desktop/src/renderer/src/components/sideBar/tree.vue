@@ -104,7 +104,7 @@
           placeholder="Enter .md file name"
           type="text"
           class="new-input"
-          :style="{ 'margin-left': `${depth * 5 + 15}px` }"
+          :style="{ 'margin-left': `${depth * 14 + 32}px` }"
           @keypress.enter="handleInputEnter"
         >
         <file
@@ -352,24 +352,22 @@ onUnmounted(() => {
   transform: translateX(-50px);
 }
 .tree-view {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--sideBarColor);
   display: flex;
   flex-direction: column;
   height: 100%;
 }
+/* Keeps the tree clear of the title bar, which overlays the top of the sidebar. */
 .tree-view > .title {
-  height: 35px;
-  line-height: 35px;
-  padding: 0 15px;
-  display: flex;
+  height: var(--titleBarHeight);
   flex-shrink: 0;
-  flex-direction: row-reverse;
 }
 
 .icon-arrow {
-  margin-right: 5px;
-  transition: transform 0.25s ease-out;
+  flex-shrink: 0;
+  margin-right: 4px;
+  transition: transform 0.2s ease-out;
   transform: rotate(90deg);
   color: var(--sideBarTextColor);
   cursor: pointer;
@@ -381,15 +379,16 @@ onUnmounted(() => {
 
 .opened-files > .title,
 .project-tree > .title {
-  height: 30px;
-  line-height: 30px;
-  font-size: 14px;
-}
-
-.opened-files .title {
-  padding-right: 15px;
+  height: 28px;
+  flex-shrink: 0;
+  padding: 0 12px;
   display: flex;
   align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sideBarTextColor);
 }
 
 .opened-files .title > span {
@@ -399,8 +398,9 @@ onUnmounted(() => {
 .opened-files .title > a {
   display: none;
   text-decoration: none;
-  color: var(--sideBarColor);
+  color: var(--sideBarIconColor);
   margin-left: 8px;
+  font-size: 14px;
 }
 .opened-files div.title:hover > a,
 .opened-files div.title > a:hover {
@@ -409,17 +409,19 @@ onUnmounted(() => {
 
 .opened-files div.title:hover > a:hover,
 .opened-files div.title > a:hover:hover {
-  color: var(--highlightThemeColor);
+  color: var(--sideBarTitleColor);
 }
 .opened-files {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  padding-bottom: 8px;
 }
 .default-cursor {
   cursor: pointer;
 }
 .opened-files .opened-files-list {
-  max-height: 112px;
+  max-height: 140px;
   overflow: auto;
   flex: 1;
 }
@@ -433,12 +435,6 @@ onUnmounted(() => {
   flex-direction: column;
   overflow: auto;
   flex: 1;
-}
-
-.project-tree > .title {
-  padding-right: 15px;
-  display: flex;
-  align-items: center;
 }
 
 .project-tree > .title > span {
@@ -455,7 +451,7 @@ onUnmounted(() => {
 }
 
 .project-tree > .title > a:hover {
-  color: var(--highlightThemeColor);
+  color: var(--sideBarTitleColor);
 }
 
 .project-tree > .title > a.active {
@@ -465,6 +461,7 @@ onUnmounted(() => {
 .project-tree > .tree-wrapper {
   overflow: auto;
   flex: 1;
+  padding-bottom: 12px;
 }
 
 .project-tree > .tree-wrapper::-webkit-scrollbar:vertical {
@@ -506,20 +503,21 @@ onUnmounted(() => {
 }
 .new-input {
   outline: none;
-  height: 22px;
-  margin: 5px 0;
+  height: 24px;
+  margin: 2px 0;
   padding: 0 6px;
+  font: inherit;
   color: var(--sideBarColor);
-  border: 1px solid var(--floatBorderColor);
-  background: var(--inputBgColor);
+  border: 1px solid var(--themeColor);
+  background: var(--editorBgColor);
   width: calc(100% - 45px);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 .tree-wrapper {
   position: relative;
 }
 .empty-project {
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   flex-direction: column;
   padding-top: 40px;

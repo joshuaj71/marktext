@@ -148,14 +148,11 @@ const handleLeftBottomClick = (name: string): void => {
   height: 100vh;
   min-width: 220px;
   position: relative;
+  font-family: var(--uiFontFamily);
   color: var(--sideBarColor);
   user-select: none;
   background: var(--sideBarBgColor);
-  border-right: 1px solid var(--itemBgColor);
-}
-
-.side-bar .left-column svg {
-  color: var(--iconColor);
+  border-right: 1px solid var(--chromeBorderColor);
 }
 
 .left-column {
@@ -164,47 +161,56 @@ const handleLeftBottomClick = (name: string): void => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 28px;
+  /* The top-left corner belongs to the title bar's menu button (or the macOS
+     traffic lights), which overlays the sidebar. */
+  padding: var(--titleBarHeight) 0 8px;
   box-sizing: border-box;
-}
-
-.left-column > ul {
-  opacity: 1;
 }
 
 .left-column ul {
   list-style: none;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 4px;
   margin: 0;
   padding: 0;
 }
 
 .left-column ul > li {
-  width: 45px;
-  height: 45px;
+  width: 32px;
+  height: 32px;
   margin: 0;
   padding: 0;
+  border-radius: var(--chromeRadius);
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.left-column ul > li:hover {
+  background: var(--chromeHoverBgColor);
 }
 
 .left-column ul > li > svg {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   color: var(--sideBarIconColor);
-  opacity: 1;
-  transition: transform 0.25s ease-in-out;
+  transition: color 0.15s ease-in-out;
+}
+
+.left-column ul > li:hover > svg {
+  color: var(--sideBarTitleColor);
+}
+
+.left-column ul > li.active {
+  background: var(--chromeActiveBgColor);
 }
 
 .left-column ul > li.active > svg {
-  color: var(--themeColor);
-}
-
-.side-bar:hover .left-column ul li svg {
-  opacity: 1;
+  color: var(--sideBarTitleColor);
 }
 
 .right-column {
@@ -216,14 +222,16 @@ const handleLeftBottomClick = (name: string): void => {
 .drag-bar {
   position: absolute;
   top: 0;
-  right: 0;
+  right: -2px;
   bottom: 0;
   height: 100%;
-  width: 3px;
+  width: 5px;
   cursor: col-resize;
+  z-index: 3;
+  transition: background 0.15s ease-in-out;
 }
 
 .drag-bar:hover {
-  border-right: 2px solid var(--iconColor);
+  background: var(--themeColor50);
 }
 </style>

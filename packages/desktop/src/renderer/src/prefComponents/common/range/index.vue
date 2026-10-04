@@ -87,7 +87,9 @@ const select = (value: number | number[]) => {
   width: 100%;
   & .value {
     text-align: right;
-    font-style: italic;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--editorColor50);
     float: right;
   }
   & .el-slider {
@@ -96,6 +98,12 @@ const select = (value: number | number[]) => {
   & .el-slider__runway,
   & .el-slider__bar {
     height: 4px;
+  }
+  & .el-slider__runway {
+    background: var(--chromeActiveBgColor);
+  }
+  & .el-slider__button {
+    background: var(--editorBgColor);
   }
   & .el-slider__button {
     width: 12px;
@@ -107,12 +115,9 @@ const select = (value: number | number[]) => {
     top: -9px;
   }
 }
-.pref-select-item .description {
-  margin-bottom: 10px;
+.pref-range-item .description {
+  margin-bottom: 4px;
 
-  & .value {
-    color: var(--editorColor80);
-  }
   & svg {
     cursor: pointer;
     opacity: 0.7;

@@ -70,7 +70,7 @@ export const addThemeStyle = (theme: string): void => {
   switch (theme) {
     case 'light':
       themeStyleEle.innerHTML = patchTheme(
-        ':root {\n  --link-color: var(--linkColor);\n  --blockquote-border-color: var(--blockquoteBorderColor);\n}'
+        ':root {\n  --theme-color: var(--themeColor);\n  --highlight-color: var(--highlightColor);\n  --editor-color: var(--editorColor);\n  --editor-color-80: var(--editorColor80);\n  --icon-color: var(--iconColor);\n  --link-color: var(--linkColor);\n  --blockquote-border-color: var(--blockquoteBorderColor);\n}'
       )
       break
     case 'dark':

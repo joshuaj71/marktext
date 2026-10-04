@@ -20,6 +20,19 @@ const className = computed<string[]>(() => getFileIconClasses(props.name))
 <style scoped>
 .file-icon {
   flex-shrink: 0;
-  margin-right: 5px;
+  width: 16px;
+  margin-right: 4px;
+  text-align: center;
+}
+/* file-icons colours each type individually; in the tree a single muted tone
+   keeps the icons from competing with the file names. */
+.file-icon::before {
+  color: var(--sideBarTextColor);
+  margin-right: 0;
+}
+/* Nearly every row is a markdown file, so its badge carries no information.
+   The slot stays, which lines file names up with folder names. */
+.file-icon.markdown-icon::before {
+  visibility: hidden;
 }
 </style>

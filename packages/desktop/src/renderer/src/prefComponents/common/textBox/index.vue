@@ -113,6 +113,16 @@ const handleInput = (value: string) => {
   margin: 12px 0;
   color: var(--editorColor);
   width: 100%;
+  /* Label on the left, control on the right; notes and errors wrap below. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 16px;
+  & .notes,
+  & .error-message {
+    flex-basis: 100%;
+  }
   & div {
     background: transparent;
     color: var(--editorColor);
@@ -128,7 +138,16 @@ const handleInput = (value: string) => {
     }
   }
   & .input {
-    width: 100%;
+    width: 240px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  & .el-input__wrapper {
+    border-radius: var(--chromeRadius);
+    box-shadow: 0 0 0 1px var(--chromeBorderColor) inset;
+  }
+  & .el-input__wrapper.is-focus {
+    box-shadow: 0 0 0 1px var(--themeColor) inset;
   }
   & .el-input.is-active .el-input__inner,
   & .el-input__inner:focus {
@@ -139,7 +158,7 @@ const handleInput = (value: string) => {
     line-height: 30px;
   }
   & .description {
-    margin-bottom: 10px;
+    margin-bottom: 0;
   }
   & svg {
     margin-left: 4px;

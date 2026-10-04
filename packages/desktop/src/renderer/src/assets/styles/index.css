@@ -1,26 +1,26 @@
 /* Common CSS use by both light and dark themes */
 :root {
-  --titleBarHeight: 32px;
+  --titleBarHeight: 38px;
   --editorAreaWidth: 750px;
 
   /*editor*/
   /*Theme color cluster*/
-  --themeColor: rgba(33, 181, 111, 1);
-  --themeColor90: rgba(33, 181, 111, 0.9);
-  --themeColor80: rgba(33, 181, 111, 0.8);
-  --themeColor70: rgba(33, 181, 111, 0.7);
-  --themeColor60: rgba(33, 181, 111, 0.6);
-  --themeColor50: rgba(33, 181, 111, 0.5);
-  --themeColor40: rgba(33, 181, 111, 0.4);
-  --themeColor30: rgba(33, 181, 111, 0.3);
-  --themeColor20: rgba(33, 181, 111, 0.2);
-  --themeColor10: rgba(33, 181, 111, 0.1);
+  --themeColor: rgba(23, 133, 91, 1);
+  --themeColor90: rgba(23, 133, 91, 0.9);
+  --themeColor80: rgba(23, 133, 91, 0.8);
+  --themeColor70: rgba(23, 133, 91, 0.7);
+  --themeColor60: rgba(23, 133, 91, 0.6);
+  --themeColor50: rgba(23, 133, 91, 0.5);
+  --themeColor40: rgba(23, 133, 91, 0.4);
+  --themeColor30: rgba(23, 133, 91, 0.3);
+  --themeColor20: rgba(23, 133, 91, 0.2);
+  --themeColor10: rgba(23, 133, 91, 0.1);
   --highlightThemeColor: var(--themeColor);
 
-  --highlightColor: rgba(33, 181, 111, 0.4);
+  --highlightColor: rgba(23, 133, 91, 0.4);
   --selectionColor: rgba(0, 0, 0, 0.1);
-  --editorColor: #4d4d4d;
-  --editorColor80: #333333;
+  --editorColor: #3b3b3b;
+  --editorColor80: #262626;
   --editorColor60: #666666;
   --editorColor50: #808080;
   --editorColor40: #999999;
@@ -29,7 +29,7 @@
   --editorColor04: #f7f7f7;
   --editorBgColor: rgba(255, 255, 255, 1);
   --deleteColor: #ff6969;
-  --iconColor: #6b737b;
+  --iconColor: #70757c;
   --codeBgColor: #d8d8d869;
   --codeBlockBgColor: rgba(0, 0, 0, 0.03);
   --footnoteBgColor: rgba(0, 0, 0, 0.03);
@@ -79,13 +79,23 @@
   --listMarkerColor: var(--editorColor50);
 
   /*marktext*/
-  --sideBarColor: rgba(0, 0, 0, 0.6);
+  --sideBarColor: rgba(0, 0, 0, 0.68);
   --sideBarIconColor: var(--iconColor);
-  --sideBarTitleColor: rgba(0, 0, 0, 1);
-  --sideBarTextColor: rgba(0, 0, 0, 0.4);
-  --sideBarBgColor: rgba(242, 242, 242, 0.9);
+  --sideBarTitleColor: rgba(0, 0, 0, 0.9);
+  --sideBarTextColor: rgba(0, 0, 0, 0.45);
+  --sideBarBgColor: #f6f6f4;
   --sideBarItemHoverBgColor: rgba(0, 0, 0, 0.03);
   --itemBgColor: rgba(255, 255, 255, 0.6);
+
+  /* Window chrome (title bar, tabs, sidebar, preferences). The tints are mixed
+     from --editorColor so every theme gets a matching set without defining them. */
+  --uiFontFamily:
+    'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', system-ui,
+    'Helvetica Neue', sans-serif;
+  --chromeBorderColor: color-mix(in srgb, var(--editorColor) 13%, transparent);
+  --chromeHoverBgColor: color-mix(in srgb, var(--editorColor) 7%, transparent);
+  --chromeActiveBgColor: color-mix(in srgb, var(--editorColor) 12%, transparent);
+  --chromeRadius: 6px;
 
   --floatFontColor: rgba(0, 0, 0, 0.6);
   --floatBgColor: #fff;
@@ -109,19 +119,29 @@
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-corner {
-  background: var(--floatHoverColor);
+  background: transparent;
 }
 
 ::-webkit-scrollbar:vertical {
   width: 12px;
 }
 
+::-webkit-scrollbar:horizontal {
+  height: 12px;
+}
+
+/* The transparent border plus background-clip insets the thumb, so it reads as
+   a thin floating pill while the full 12px track stays grabbable. */
 ::-webkit-scrollbar-thumb {
   background: var(--editorColor30);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--editorColor50);
+  background-clip: padding-box;
 }
 
 :focus {

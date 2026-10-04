@@ -43,7 +43,7 @@ test.describe('Issue #5539 editor text legibility', () => {
 
   // Each theme's opaque code foreground, as its Prism theme declares it.
   const cases: Array<[string, string]> = [
-    ['light', 'rgb(77, 77, 77)'],
+    ['light', 'rgb(59, 59, 59)'],
     ['ayu-light', 'rgb(87, 95, 102)'],
     ['dark', 'rgb(248, 248, 242)'],
     // graphite's --editorColor is translucent, so the code foreground cannot

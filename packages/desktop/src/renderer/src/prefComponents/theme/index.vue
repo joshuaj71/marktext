@@ -171,7 +171,7 @@ const onSelectChange = (type: keyof PreferencesState, value: unknown): void => {
       color: rgba(0, 0, 0, 0.7);
       background: rgba(255, 255, 255, 1);
       & a {
-        color: rgba(33, 181, 111, 1);
+        color: rgba(23, 133, 91, 1);
       }
     }
     &.graphite {

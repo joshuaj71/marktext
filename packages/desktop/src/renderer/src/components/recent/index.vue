@@ -36,7 +36,9 @@ const newFile = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: var(--editorColor);
+    font-family: var(--uiFontFamily);
+    font-size: 14px;
+    color: var(--editorColor50);
     & .el-button {
       margin-top: 20px;
     }

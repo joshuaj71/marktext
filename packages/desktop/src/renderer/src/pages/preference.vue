@@ -69,6 +69,7 @@ onMounted(() => {
   top: 0;
   left: 0;
   display: flex;
+  font-family: var(--uiFontFamily);
   background: var(--editorBgColor);
 
   & h1,
@@ -77,30 +78,33 @@ onMounted(() => {
   & h4,
   & h5,
   & h6 {
-    color: var(--editorColor);
-    font-weight: 500;
+    color: var(--editorColor80);
+    font-weight: 600;
     line-height: 1.4;
   }
 
+  /* Page title */
   & h4 {
-    margin: 0;
-    font-size: 18px;
+    margin: 0 0 4px;
+    font-size: 22px;
+    letter-spacing: -0.01em;
   }
 
-  & h5 {
-    font-size: 15px;
-  }
-
+  /* Section labels */
+  & h5,
   & h6 {
-    font-size: 15px;
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--editorColor50);
   }
 
   & .notes {
     display: block;
-    margin: 8px 0 0;
-    font-style: italic;
+    margin: 6px 0 0;
     font-size: 12px;
-    color: var(--editorColor80);
+    color: var(--editorColor50);
   }
 
   & .pref-content {
@@ -123,6 +127,9 @@ onMounted(() => {
       flex: 1;
       height: calc(100vh - var(--titleBarHeight));
       overflow: auto;
+      /* Caps the measure on wide windows; the padding keeps the scrollbar at
+         the window edge instead of beside the column. */
+      padding-inline: max(40px, calc((100% - 680px) / 2));
     }
     & span,
     & div,

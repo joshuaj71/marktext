@@ -1,5 +1,13 @@
 <template>
-  <div class="editor-tabs">
+  <div
+    class="editor-tabs"
+    :class="{
+      'in-title-bar': inTitleBar,
+      'beside-window-controls': hasWindowControls,
+      'beside-menu-button': hasWindowControls && !showSideBar,
+      'beside-traffic-lights': isMac && inTitleBar && !showSideBar
+    }"
+  >
     <div
       ref="tabContainer"
       class="scrollable-tabs"
@@ -42,10 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useEditorStore } from '@/store/editor'
 import { useLayoutStore } from '@/store/layout'
+import { usePreferencesStore } from '@/store/preferences'
 import { storeToRefs } from 'pinia'
+import { isMac } from '@/util'
+import { shouldShowInAppTitleBar } from '../titleBar/visibility'
 import autoScroll from 'dom-autoscroller'
 import dragula from 'dragula'
 import { Plus, Close } from '@element-plus/icons-vue'
@@ -57,6 +68,15 @@ const editorStore = useEditorStore()
 const layoutStore = useLayoutStore()
 
 const { currentFile, tabs } = storeToRefs(editorStore)
+const { showSideBar } = storeToRefs(layoutStore)
+const { titleBarStyle } = storeToRefs(usePreferencesStore())
+
+// With an in-app title bar the strip sits in the title bar's own row, so it has
+// to leave room for whatever that row pins to its ends: the window controls on
+// the right, and — once the sidebar no longer occupies the corner — the menu
+// button (Windows/Linux) or the traffic lights (macOS) on the left.
+const inTitleBar = computed(() => shouldShowInAppTitleBar(titleBarStyle.value, isMac))
+const hasWindowControls = computed(() => titleBarStyle.value === 'custom' && !isMac)
 
 interface AutoScroller {
   readonly down: boolean
@@ -274,29 +294,55 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .close-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
   cursor: pointer;
   transition: opacity 0.15s ease-in-out;
 }
 
 .close-icon:hover {
-  color: var(--focusColor);
+  background: var(--chromeActiveBgColor);
+  color: var(--editorColor);
 }
 
 .editor-tabs {
   position: relative;
   display: flex;
   flex-direction: row;
-  height: 28px;
+  align-items: center;
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  font-family: var(--uiFontFamily);
   user-select: none;
-  box-shadow: 0px 0px 9px 2px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  &:hover > .new-file {
-    opacity: 1 !important;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1px solid var(--chromeBorderColor);
   }
+}
+.editor-tabs.in-title-bar {
+  height: var(--titleBarHeight);
+}
+.editor-tabs.beside-window-controls {
+  padding-right: 146px;
+}
+.editor-tabs.beside-menu-button {
+  padding-left: 46px;
+}
+.editor-tabs.beside-traffic-lights {
+  padding-left: 80px;
 }
 .scrollable-tabs {
   flex: 0 1 auto;
-  height: 28px;
+  height: 100%;
   overflow: hidden;
 }
 .tabs-container {
@@ -304,26 +350,49 @@ onBeforeUnmount(() => {
   list-style: none;
   margin: 0;
   padding: 0;
-  height: 28px;
+  height: 100%;
   position: relative;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 2px;
   overflow-y: hidden;
   z-index: 2;
   &::-webkit-scrollbar:horizontal {
     display: none;
   }
+  /* The bundled themes draw a second divider under the tab list alone, in
+     their own colour; the strip's ::after above already spans the full row. */
+  &::after {
+    content: none !important;
+  }
   & > li {
-    transition: all 0.15s ease-in-out;
+    -webkit-app-region: no-drag;
+    transition: color 0.15s ease-in-out;
     position: relative;
-    padding: 0 8px;
+    /* Own stacking context, so the ::before pill below paints over the tab's
+       background but under its label. */
+    z-index: 0;
+    padding: 0 5px 0 10px;
     color: var(--editorColor50);
-    font-size: 12px;
+    font-size: 13px;
     line-height: 28px;
     height: 28px;
-    max-width: 280px;
+    max-width: 220px;
+    border-radius: var(--chromeRadius);
     display: flex;
     align-items: center;
+    /* The hover/active pill is a pseudo-element rather than the tab's own
+       background because the bundled themes force that background to the
+       editor colour with !important. */
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      transition: background 0.15s ease-in-out;
+    }
     &[aria-grabbed='true'] {
       color: var(--editorColor30) !important;
     }
@@ -334,7 +403,10 @@ onBeforeUnmount(() => {
       outline: none;
     }
     &:hover {
-      background: var(--floatBgColor) !important;
+      color: var(--editorColor);
+    }
+    &:hover::before {
+      background: var(--chromeHoverBgColor);
     }
     &:hover > .close-icon {
       opacity: 1;
@@ -346,12 +418,13 @@ onBeforeUnmount(() => {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      margin-right: 3px;
+      margin-right: 4px;
     }
     & > .unsaved-dot {
       display: none;
       width: 6px;
       height: 6px;
+      margin: 0 6px;
       border-radius: 50%;
       background: var(--themeColor);
       flex-shrink: 0;
@@ -359,12 +432,13 @@ onBeforeUnmount(() => {
   }
   & > li.unsaved:not(.active) {
     & > .close-icon {
-      opacity: 0;
+      display: none;
     }
     & > .unsaved-dot {
       display: block;
     }
     &:hover > .close-icon {
+      display: inline-flex;
       opacity: 1;
     }
     &:hover > .unsaved-dot {
@@ -372,16 +446,10 @@ onBeforeUnmount(() => {
     }
   }
   & > li.active {
-    background: var(--itemBgColor);
+    color: var(--editorColor);
     z-index: 3;
-    &:after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      height: 2px;
-      background: var(--themeColor);
+    &::before {
+      background: var(--chromeActiveBgColor);
     }
     & > .close-icon {
       opacity: 1;
@@ -392,27 +460,27 @@ onBeforeUnmount(() => {
   }
 }
 .editor-tabs > .new-file {
+  -webkit-app-region: no-drag;
+  position: relative;
+  z-index: 2;
   flex: 0 0 28px;
   width: 28px;
   height: 28px;
-  border-right: none;
-  background: transparent;
+  margin-left: 2px;
+  border-radius: var(--chromeRadius);
   display: flex;
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
-  color: var(--editorColor50);
-  opacity: 0;
-  &.always-visible {
-    opacity: 1;
-  }
+  color: var(--editorColor40);
+  transition:
+    color 0.15s ease-in-out,
+    background 0.15s ease-in-out;
 }
 
 .editor-tabs > .new-file:hover {
-  transition: all 0.15s ease-in-out;
-  & > svg {
-    fill: var(--focusColor);
-  }
+  color: var(--editorColor);
+  background: var(--chromeHoverBgColor);
 }
 
 /* dragula effects */

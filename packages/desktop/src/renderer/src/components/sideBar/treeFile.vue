@@ -3,7 +3,7 @@
     ref="fileEl"
     :title="file.pathname"
     class="side-bar-file"
-    :style="{ 'padding-left': `${depth * 6 + 10}px`, opacity: file.isMarkdown ? 1 : 0.75 }"
+    :style="{ 'padding-left': `${depth * 14 + 6}px`, opacity: file.isMarkdown ? 1 : 0.75 }"
     :class="[
       { current: currentFile?.pathname === file.pathname, active: file.id === activeItem.id }
     ]"
@@ -104,52 +104,45 @@ onMounted(() => {
   align-items: center;
   cursor: default;
   user-select: none;
-  height: 30px;
+  height: 28px;
+  margin: 1px 6px;
   box-sizing: border-box;
-  padding-right: 15px;
+  padding-right: 8px;
+  border-radius: var(--chromeRadius);
   &:hover {
-    background: var(--sideBarItemHoverBgColor);
+    background: var(--chromeHoverBgColor);
   }
   & > span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  &::before {
-    content: '';
-    position: absolute;
-    display: block;
-    left: 0;
-    background: var(--themeColor);
-    width: 2px;
-    height: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all 0.2s ease;
-  }
 }
-.side-bar-file.current::before {
-  height: 100%;
+/* After :hover so the open file and the selection stay visible while the
+   pointer is over them. */
+.side-bar-file.current {
+  background: var(--chromeActiveBgColor);
 }
 .side-bar-file.current > span {
-  color: var(--themeColor);
+  color: var(--sideBarTitleColor);
+  font-weight: 500;
 }
-/* After :hover so the selection stays visible while the pointer is over it. */
 .side-bar-file.active {
-  background: var(--themeColor20);
+  background: var(--chromeActiveBgColor);
 }
 .side-bar-file.active > span {
   color: var(--sideBarTitleColor);
 }
 input.rename {
-  height: 22px;
+  height: 24px;
   outline: none;
-  margin: 5px 0;
-  padding: 0 8px;
+  margin: 2px 0;
+  padding: 0 6px;
+  font: inherit;
   color: var(--sideBarColor);
-  border: 1px solid var(--floatBorderColor);
-  background: var(--floatBorderColor);
+  border: 1px solid var(--themeColor);
+  background: var(--editorBgColor);
   width: 100%;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 </style>

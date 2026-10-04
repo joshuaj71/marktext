@@ -16,6 +16,9 @@ interface SetLayoutOptions {
 }
 
 const normalizeSideBarWidth = (width: unknown): number => {
+  // `Number(null)` and `Number('')` are 0, not NaN, so a width that was never
+  // saved has to be caught here or it clamps to the 220px minimum.
+  if (width == null || width === '') return 280
   const numericWidth = Number(width)
   return Number.isFinite(numericWidth) ? Math.max(numericWidth, 220) : 280
 }

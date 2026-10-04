@@ -168,13 +168,20 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
 .search-result-item {
   position: relative;
   user-select: none;
-  padding: 0 10px 8px 10px;
+  padding: 0 6px 6px 6px;
   color: var(--sideBarColor);
-  font-size: 14px;
+  font-size: 13px;
 }
 .search-result-item > .search-result {
   display: flex;
   align-items: center;
+  height: 28px;
+  padding: 0 8px 0 6px;
+  border-radius: var(--chromeRadius);
+  cursor: pointer;
+}
+.search-result-item > .search-result:hover {
+  background: var(--chromeHoverBgColor);
 }
 .search-result-item > .search-result > svg:first-child {
   margin-right: 3px;
@@ -184,20 +191,21 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
   overflow: hidden;
 }
 .search-result-item .title .filename {
-  font-size: 12px;
+  font-size: 13px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   padding-right: 8px;
 }
 .search-result-item .matches ul {
+  margin: 0;
   padding-left: 0;
   list-style-type: none;
 }
 .search-result-item .matches ul li {
   display: block;
-  padding: 2px 16px;
-  padding-right: 0;
+  padding: 4px 8px 4px 26px;
+  border-radius: var(--chromeRadius);
   cursor: pointer;
   /* Hide space between inline spans */
   font-size: 0;
@@ -207,14 +215,14 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
   line-height: 16px;
   height: 16px;
   display: inline-block;
-  color: var(--sideBarTextColor);
-  border-radius: 1px;
+  color: var(--sideBarTitleColor);
+  border-radius: 2px;
 }
 .search-result-item .matches ul li:hover {
-  background: var(--sideBarItemHoverBgColor);
+  background: var(--chromeHoverBgColor);
 }
 .search-result-item .matches ul li span {
-  font-size: 13px;
+  font-size: 12px;
   white-space: pre;
 }
 .search-result-item .matches .button {
@@ -234,7 +242,7 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
 .title {
   display: flex;
   align-items: center;
-  color: var(--sideBarTextColor);
+  color: var(--sideBarColor);
 }
 .title .filename {
   flex: 1;
@@ -251,10 +259,10 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
   min-width: 16px;
   height: 16px;
   padding: 0 5px;
-  border-radius: 3px;
+  border-radius: 8px;
   flex-shrink: 0;
-  background: var(--itemBgColor);
-  color: var(--sideBarTextColor);
+  background: var(--chromeActiveBgColor);
+  color: var(--sideBarColor);
 }
 
 .folder-path {
@@ -264,7 +272,7 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
 .folder-path > span,
 .matches {
   width: 100%;
-  margin-top: 5px;
+  margin-top: 1px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -272,7 +280,10 @@ const handleSearchResultClick = (searchMatch: SearchMatch): void => {
 }
 
 .icon-arrow {
-  transition: transform 0.25s ease-out;
+  flex-shrink: 0;
+  width: 16px;
+  margin-right: 4px;
+  transition: transform 0.2s ease-out;
   transform: rotate(90deg);
   color: var(--sideBarTextColor);
   cursor: pointer;

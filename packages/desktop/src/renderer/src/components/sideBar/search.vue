@@ -340,48 +340,59 @@ onMounted(() => {
 }
 .search-wrapper {
   display: flex;
-  margin: 37px 8px 10px 8px;
-  padding: 0 6px;
-  border-radius: 4px;
-  height: 28px;
-  border: 1px solid var(--floatBorderColor);
-  background: var(--inputBgColor);
+  /* The top margin keeps the field clear of the title bar overlaying the sidebar. */
+  margin: calc(var(--titleBarHeight) + 2px) 10px 10px 6px;
+  padding: 0 4px 0 8px;
+  border-radius: var(--chromeRadius);
+  height: 30px;
+  border: 1px solid var(--chromeBorderColor);
+  background: var(--editorBgColor);
   box-sizing: border-box;
   align-items: center;
+  transition: border-color 0.15s ease-in-out;
+  &:focus-within {
+    border-color: var(--themeColor);
+  }
   & > input {
-    color: var(--sideBarColor);
+    color: var(--sideBarTitleColor);
     background: transparent;
     height: 100%;
     flex: 1;
     border: none;
     outline: none;
     padding: 0;
+    font: inherit;
     font-size: 13px;
     width: 50%;
+    &::placeholder {
+      color: var(--sideBarTextColor);
+    }
   }
   & > .controls {
     display: flex;
     flex-shrink: 0;
     margin-top: 0;
+    gap: 1px;
     & > span {
       cursor: pointer;
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
       margin-left: 0;
       margin-right: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       &:hover {
-        color: var(--sideBarIconColor);
+        background: var(--chromeHoverBgColor);
       }
       & > svg {
         width: 14px;
         height: 14px;
         fill: var(--sideBarIconColor);
-        &:hover {
-          fill: var(--highlightThemeColor);
-        }
+      }
+      &.active {
+        background: var(--themeColor20);
       }
       &.active svg {
         fill: var(--highlightThemeColor);
@@ -409,10 +420,10 @@ onMounted(() => {
 }
 .search-result-info,
 .search-message-section {
-  padding-left: 15px;
-  margin-bottom: 5px;
+  padding: 0 12px;
+  margin-bottom: 6px;
   font-size: 12px;
-  color: var(--sideBarColor);
+  color: var(--sideBarTextColor);
 }
 .empty,
 .search-result {
@@ -424,7 +435,7 @@ onMounted(() => {
   }
 }
 .empty {
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
   display: flex;
   flex-direction: column;

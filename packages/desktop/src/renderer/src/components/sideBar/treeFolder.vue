@@ -3,7 +3,7 @@
     <div
       ref="folderEl"
       class="folder-name"
-      :style="{ 'padding-left': `${depth * 6 + 10}px` }"
+      :style="{ 'padding-left': `${depth * 14 + 6}px` }"
       :class="[{ active: folder.id === activeItem.id }]"
       :title="folder.pathname"
       @click="folderNameClick"
@@ -32,6 +32,7 @@
     <div
       v-if="!isCollapsed"
       class="folder-contents"
+      :style="{ '--indentGuideOffset': `${depth * 14 + 20}px` }"
     >
       <tree-folder
         v-for="childFolder of folder.folders"
@@ -45,7 +46,7 @@
         v-model="createName"
         type="text"
         class="new-input"
-        :style="{ 'margin-left': `${depth * 5 + 15}px` }"
+        :style="{ 'margin-left': `${depth * 14 + 46}px` }"
         @keypress.enter="handleInputEnter"
       >
       <File
@@ -152,37 +153,56 @@ onMounted(() => {
     user-select: none;
     display: flex;
     align-items: center;
-    height: 30px;
-    padding-right: 15px;
+    height: 28px;
+    margin: 1px 6px;
+    padding-right: 8px;
+    border-radius: var(--chromeRadius);
     & > .icon-arrow {
       flex-shrink: 0;
-      color: var(--sideBarIconColor);
-      margin-right: 5px;
-      transition: transform 0.25s ease-out;
+      width: 16px;
+      color: var(--sideBarTextColor);
+      margin-right: 4px;
+      transition: transform 0.2s ease-out;
       transform: rotate(90deg);
     }
     & > .icon-arrow.fold {
       transform: rotate(0);
     }
     &:hover {
-      background: var(--sideBarItemHoverBgColor);
+      background: var(--chromeHoverBgColor);
     }
     /* After :hover so the selection stays visible while the pointer is over it. */
     &.active {
-      background: var(--themeColor20);
+      background: var(--chromeActiveBgColor);
+    }
+  }
+  /* Indent guide: a hairline under the folder's arrow that runs the height of
+     its children, so nesting depth stays readable in a long tree. */
+  & > .folder-contents {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: var(--indentGuideOffset);
+      width: 1px;
+      background: var(--chromeBorderColor);
+      pointer-events: none;
     }
   }
 }
 .new-input,
 input.rename {
   outline: none;
-  height: 22px;
-  margin: 5px 0;
+  height: 24px;
+  margin: 2px 0;
   padding: 0 6px;
+  font: inherit;
   color: var(--sideBarColor);
-  border: 1px solid var(--floatBorderColor);
-  background: var(--floatBorderColor);
+  border: 1px solid var(--themeColor);
+  background: var(--editorBgColor);
   width: 70%;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 </style>

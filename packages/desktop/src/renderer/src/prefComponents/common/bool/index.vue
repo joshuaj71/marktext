@@ -110,29 +110,23 @@ const handleSwitchChange = (value: boolean | string | number) => {
   }
 }
 
-span.el-switch__core::after {
-  top: 3px;
-  left: 7px;
-  width: 10px;
-  height: 10px;
+.pref-switch-item .el-switch {
+  flex-shrink: 0;
+  margin-left: 16px;
+  height: 22px;
+  --el-switch-on-color: var(--themeColor);
+  --el-switch-off-color: var(--editorColor30);
 }
 
 .el-switch .el-switch__core {
-  border: 2px solid var(--iconColor);
-  background: transparent;
+  min-width: 36px;
+  height: 20px;
+  border: none;
+  border-radius: 10px;
   box-sizing: border-box;
 }
 
 span.el-switch__label {
   color: var(--editorColor50);
-}
-
-.el-switch:not(.is-checked) .el-switch__core::after {
-  background: var(--iconColor);
-}
-
-.el-switch.is-checked .el-switch__core {
-  border-color: var(--themeColor);
-  background-color: var(--themeColor);
 }
 </style>

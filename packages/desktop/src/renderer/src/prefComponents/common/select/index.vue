@@ -85,8 +85,19 @@ const select = (value: SelectValue) => {
   margin: 12px 0;
   font-size: 14px;
   color: var(--editorColor);
+  /* Label on the left, control on the right; notes wrap onto their own line. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 16px;
   & .el-select {
-    width: 100%;
+    width: 240px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  & .notes {
+    flex-basis: 100%;
   }
   & div {
     background: transparent;
@@ -105,7 +116,7 @@ const select = (value: SelectValue) => {
   }
 }
 .pref-select-item .description {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   & svg {
     margin-left: 4px;
     cursor: pointer;
@@ -136,7 +147,15 @@ div.el-select-dropdown {
     display: none;
   }
 }
-.el-select__wrapper.is-focused {
+.pref-select-item .el-select__wrapper {
+  border-radius: var(--chromeRadius);
+  box-shadow: 0 0 0 1px var(--chromeBorderColor) inset;
+}
+.pref-select-item .el-select__wrapper.is-hovering:not(.is-focused) {
+  box-shadow: 0 0 0 1px var(--editorColor30) inset;
+}
+.el-select__wrapper.is-focused,
+.pref-select-item .el-select__wrapper.is-focused {
   box-shadow: 0 0 0 1px var(--themeColor) inset;
 }
 </style>

@@ -25,20 +25,35 @@ defineProps<{
 .pref-compound-item {
   font-size: 14px;
   user-select: none;
-  margin: 32px 0;
+  margin: 28px 0;
   color: var(--editorColor);
 
   & .pref-compound-head h6.title {
-    padding-bottom: 6px;
+    padding: 0 2px 8px;
   }
 
+  /* Each group of settings reads as one card, its rows split by hairlines. */
   & .pref-compound-body {
-    padding: 0;
-    margin-top: -4px;
+    padding: 2px 16px;
+    border: 1px solid var(--chromeBorderColor);
+    border-radius: 10px;
+    & > * {
+      margin: 0;
+      padding: 12px 0;
+    }
+    & > * + * {
+      border-top: 1px solid var(--chromeBorderColor);
+    }
+    & > .pref-separator {
+      display: none;
+    }
+  }
+
+  & > .notes {
+    margin: 8px 2px 0;
   }
 
   & .description {
-    margin-bottom: 10px;
     & i {
       cursor: pointer;
       opacity: 0.7;

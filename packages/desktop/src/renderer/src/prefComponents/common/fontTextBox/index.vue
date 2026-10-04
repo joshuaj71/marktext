@@ -134,8 +134,20 @@ onMounted(async () => {
   margin: 12px 0;
   font-size: 14px;
   color: var(--editorColor);
+  /* Label on the left, control on the right, like the other preference rows. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 16px;
   & .font-autocomplete {
-    width: 100%;
+    width: 240px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  & .el-input__wrapper {
+    border-radius: var(--chromeRadius);
+    box-shadow: 0 0 0 1px var(--chromeBorderColor) inset;
   }
   & input.el-input__inner {
     height: 30px;
@@ -153,7 +165,7 @@ onMounted(async () => {
   }
 }
 .pref-font-input-item .description {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   & svg {
     cursor: pointer;
     opacity: 0.7;
