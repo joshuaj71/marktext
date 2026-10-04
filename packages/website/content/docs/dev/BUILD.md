@@ -65,7 +65,7 @@ On Arch Linux: `sudo pacman -S libx11 libxkbfile libsecret fontconfig`
 **Additional development dependencies on Windows:**
 
 - Windows 10 SDK (only needed before Windows 10)
-- Visual Studio 2022 (Build Tools for Visual Studio 2022). You also need the spectre-mitigated MSVC libs — see [developer README §1.3](README.md#13-windows-specific-pre-requisites) for the exact components to install.
+- Build Tools for Visual Studio 2022 or 2026 (the full IDE works too). You also need the spectre-mitigated MSVC libs — see [developer README §1.3](README.md#13-windows-specific-pre-requisites) for the exact components to install.
 
 ### Let's build
 

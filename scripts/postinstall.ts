@@ -5,9 +5,12 @@
  * Cross-platform postinstall: patch native-keymap for C++20, download Electron,
  * rebuild all native modules for Electron's ABI, generate locale files.
  *
- * native-keymap is listed as optionalDependency so pnpm ignores its auto-gyp
- * compile failure on Node v24+. This script restores the source, patches and
- * rebuilds it correctly via @electron/rebuild.
+ * No native module is compiled at install time under pnpm (`allowBuilds` in
+ * pnpm-workspace.yaml turns that off); they are all built here, by
+ * @electron/rebuild. npm has no such switch, so native-keymap is listed as
+ * optionalDependency: npm then tolerates its auto-gyp compile failure on Node
+ * v24+ and drops the package, and this script restores the source, patches
+ * and rebuilds it.
  *
  * Step order matters: native-keymap source must be restored before downloading
  * Electron, because the inner `pnpm add` can disturb devDependency state.

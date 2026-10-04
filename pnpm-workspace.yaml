@@ -11,11 +11,17 @@ overrides:
   'esbuild@>=0.27.0 <0.28.1': '0.28.1'
 
 allowBuilds:
-  ced: true
+  # ced, keytar and native-keymap are built by `electron-rebuild -f` in
+  # scripts/postinstall.ts, which replaces whatever an install-time build
+  # produced. Building them at install time as well only adds a second
+  # compiler run through pnpm's bundled node-gyp — an older release than the
+  # one electron-rebuild uses, and one that fails outright on a machine whose
+  # only Visual Studio is newer than it knows about.
+  ced: false
   electron-winstaller: true
   esbuild: true
-  keytar: true
-  native-keymap: true
+  keytar: false
+  native-keymap: false
   sharp: true
   unrs-resolver: true
   workerd: true

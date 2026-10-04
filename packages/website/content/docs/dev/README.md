@@ -17,8 +17,9 @@
 
 ### 1.3 Windows Specific Pre-requisites
 
-- You will need [Build Tools for Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (Scroll all the way to the bottom)
-  - Additionally, you need **spectre-mitigated MSVC**, go to "Individual Components" and select "MSVC ... - VS2022 C++ Spectre-Mitigated Libs"
+- You will need [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/) 2022 or 2026 (Scroll all the way to the bottom), with the "Desktop development with C++" workload
+  - Additionally, you need **spectre-mitigated MSVC** for the same toolset: go to "Individual Components", search for "Spectre" and select the x64/x86 "C++ Spectre-mitigated libs (Latest)" entry (on VS 2022 it is named "MSVC v143 - VS 2022 C++ x64/x86 Spectre-mitigated libs")
+  - The build uses the newest installed Visual Studio that has those components; no version is pinned. To force one, set the `npm_config_msvs_version` environment variable (for example `2022`) before `pnpm install`
   - Many native libraries do not support ClangCL well yet, hence we force it to use MSVC in our `.npmrc` (pnpm respects this file)
 
 ### 1.4 Clone and Install
