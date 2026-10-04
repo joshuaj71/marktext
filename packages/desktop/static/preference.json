@@ -66,6 +66,7 @@
   "followSystemTheme": true,
   "lightModeTheme": "light",
   "darkModeTheme": "dark",
+  "accentColor": "",
   "customCss": "",
 
   "spellcheckerEnabled": false,

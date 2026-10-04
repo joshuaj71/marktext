@@ -68,6 +68,7 @@ export interface IUserPreferences {
   followSystemTheme?: boolean
   lightModeTheme?: string
   darkModeTheme?: string
+  accentColor?: string
   lastOpenedFolder?: string
   autoNormalizeLineEndings?: boolean
   watcherUsePolling?: boolean

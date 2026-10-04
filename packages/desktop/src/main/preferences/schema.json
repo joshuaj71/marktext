@@ -337,6 +337,12 @@
     "type": "string",
     "default": "dark"
   },
+  "accentColor": {
+    "description": "Theme--Accent color that replaces the theme's own; empty keeps the theme's.",
+    "type": "string",
+    "pattern": "^(#[0-9a-fA-F]{6})?$",
+    "default": ""
+  },
   "customCss": {
     "description": "Custom CSS--Custom CSS to apply to the current theme.--internal",
     "type": "string",

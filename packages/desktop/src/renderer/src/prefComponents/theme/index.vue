@@ -1,6 +1,65 @@
 <template>
   <div class="pref-theme">
     <h4>{{ t('preferences.theme.title') }}</h4>
+    <compound>
+      <template #head>
+        <h6 class="title">
+          {{ t('preferences.theme.accentColor') }}
+        </h6>
+      </template>
+      <template #children>
+        <section class="pref-accent">
+          <div class="accent-swatches">
+            <button
+              type="button"
+              class="accent-swatch theme-default"
+              :class="{ active: !accentColor }"
+              :title="t('preferences.theme.accentThemeDefault')"
+              :aria-label="t('preferences.theme.accentThemeDefault')"
+              :style="{ '--swatchColor': themeAccent }"
+              @click="commitAccent('')"
+            />
+            <button
+              v-for="preset of ACCENT_PRESETS"
+              :key="preset.color"
+              type="button"
+              class="accent-swatch"
+              :class="{ active: shownAccent === preset.color && !!accentColor }"
+              :title="preset.name"
+              :aria-label="preset.name"
+              :style="{ '--swatchColor': preset.color }"
+              @click="commitAccent(preset.color)"
+            />
+          </div>
+          <div class="accent-custom">
+            <span class="accent-label">{{ t('preferences.theme.accentHue') }}</span>
+            <input
+              class="accent-hue"
+              type="range"
+              min="0"
+              max="359"
+              step="1"
+              :value="shownHue"
+              :aria-label="t('preferences.theme.accentHue')"
+              @pointerdown="startHueDrag"
+              @input="onHueInput"
+              @change="onHueChange"
+            >
+            <el-color-picker
+              :model-value="shownAccent"
+              :title="t('preferences.theme.accentCustom')"
+              :aria-label="t('preferences.theme.accentCustom')"
+              size="small"
+              color-format="hex"
+              @active-change="onPickerDrag"
+              @change="onPickerChange"
+            />
+            <code class="accent-value">{{ shownAccent.toUpperCase() }}</code>
+          </div>
+        </section>
+      </template>
+    </compound>
+
     <section class="offcial-themes">
       <div
         v-for="themeItem of themes"
@@ -87,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { usePreferencesStore } from '@/store/preferences'
 import type { PreferencesState } from '@/store/preferences'
 import { storeToRefs } from 'pinia'
@@ -100,6 +159,15 @@ import CurSelect from '../common/select/index.vue'
 import Separator from '../common/separator/index.vue'
 import Compound from '../common/compound/index.vue'
 import type { PrefSelectOption } from '../common/types'
+import {
+  ACCENT_PRESETS,
+  applyAccentColor,
+  getThemeAccentColor,
+  hexToHsl,
+  hslToHex,
+  isAccentColor,
+  type Hsl
+} from '@/util/accentColor'
 
 interface ThemePreview {
   name: string
@@ -111,8 +179,83 @@ const themes = ref<ThemePreview[]>([])
 const { t } = useI18n()
 const preferenceStore = usePreferencesStore()
 
-const { followSystemTheme, lightModeTheme, darkModeTheme, theme, customCss } =
+const { followSystemTheme, lightModeTheme, darkModeTheme, theme, accentColor, customCss } =
   storeToRefs(preferenceStore)
+
+// How often, in ms, a colour still being dragged is written to the preferences
+// so the editor windows follow along. Each write also hits the settings file.
+const DRAG_COMMIT_INTERVAL_MS = 120
+
+const themeAccent = ref(getThemeAccentColor())
+// Colour under the pointer while the hue slider or the picker is being
+// dragged; null otherwise. Shown in place of the stored accent so the controls
+// do not jump when a throttled write echoes back mid-drag.
+const draftAccent = ref<string | null>(null)
+// Saturation and lightness frozen at the start of a hue drag. Re-deriving them
+// from each intermediate colour would let rounding drift them off course.
+let hueDragBase: Hsl | null = null
+let lastDragCommit = 0
+
+const shownAccent = computed<string>(() => {
+  if (draftAccent.value) return draftAccent.value
+  return isAccentColor(accentColor.value) ? accentColor.value.toLowerCase() : themeAccent.value
+})
+const shownHue = computed<number>(() => Math.round(hexToHsl(shownAccent.value).h))
+
+const commitAccent = (color: string): void => {
+  draftAccent.value = null
+  hueDragBase = null
+  onSelectChange('accentColor', color)
+}
+
+const previewAccent = (color: string): void => {
+  draftAccent.value = color
+  applyAccentColor(color)
+  const now = Date.now()
+  if (now - lastDragCommit >= DRAG_COMMIT_INTERVAL_MS) {
+    lastDragCommit = now
+    onSelectChange('accentColor', color)
+  }
+}
+
+const startHueDrag = (): void => {
+  hueDragBase = hexToHsl(shownAccent.value)
+}
+
+const hueToAccent = (event: Event): string => {
+  const base = hueDragBase ?? hexToHsl(shownAccent.value)
+  hueDragBase = base
+  return hslToHex({ ...base, h: Number((event.target as HTMLInputElement).value) })
+}
+
+const onHueInput = (event: Event): void => {
+  previewAccent(hueToAccent(event))
+}
+
+const onHueChange = (event: Event): void => {
+  commitAccent(hueToAccent(event))
+}
+
+const onPickerDrag = (color: string | null): void => {
+  if (isAccentColor(color)) previewAccent(color.toLowerCase())
+}
+
+const onPickerChange = (color: string | null): void => {
+  commitAccent(isAccentColor(color) ? color.toLowerCase() : '')
+}
+
+// The "theme default" swatch previews the theme's own accent, which is only
+// readable once the new theme's stylesheet is in place.
+watch(theme, () => {
+  nextTick(() => {
+    themeAccent.value = getThemeAccentColor()
+  })
+})
+
+onBeforeUnmount(() => {
+  // Leaving mid-drag: drop the preview and fall back to the stored accent.
+  if (draftAccent.value) applyAccentColor(accentColor.value)
+})
 
 // Generate dropdown options from configThemes
 const themeOptions: PrefSelectOption<string>[] = configThemes.map((theme) => ({
@@ -124,6 +267,7 @@ const themeOptions: PrefSelectOption<string>[] = configThemes.map((theme) => ({
 }))
 
 onMounted(async () => {
+  themeAccent.value = getThemeAccentColor()
   const newThemes: ThemePreview[] = []
   for (const theme of configThemes) {
     const html = await markdownToHtml(themeMd.replace(/{theme}/, theme.name))
@@ -141,6 +285,94 @@ const onSelectChange = (type: keyof PreferencesState, value: unknown): void => {
 </script>
 
 <style>
+.pref-accent {
+  & .accent-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  & .accent-swatch {
+    appearance: none;
+    position: relative;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--swatchColor);
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out;
+    /* The gap between the dot and its selection ring is the page background. */
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  & .accent-swatch:hover {
+    transform: scale(1.1);
+  }
+  & .accent-swatch:focus-visible {
+    outline-color: var(--editorColor30);
+  }
+  & .accent-swatch.active {
+    outline-color: var(--swatchColor);
+  }
+  /* Half the theme's accent, half the page: "whatever the theme uses". */
+  & .accent-swatch.theme-default {
+    background: linear-gradient(135deg, var(--swatchColor) 50%, var(--editorBgColor) 50%);
+    box-shadow: inset 0 0 0 1px var(--chromeBorderColor);
+  }
+  & .accent-custom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  & .accent-label {
+    flex-shrink: 0;
+    color: var(--editorColor);
+  }
+  & .accent-hue {
+    appearance: none;
+    flex: 1;
+    min-width: 0;
+    height: 10px;
+    margin: 0;
+    border-radius: 5px;
+    background: linear-gradient(
+      to right,
+      hsl(0 80% 55%),
+      hsl(60 80% 50%),
+      hsl(120 70% 45%),
+      hsl(180 75% 45%),
+      hsl(240 80% 60%),
+      hsl(300 75% 55%),
+      hsl(359 80% 55%)
+    );
+    cursor: pointer;
+  }
+  & .accent-hue::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: var(--themeColor);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  & .accent-value {
+    flex-shrink: 0;
+    width: 64px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--editorColor50);
+  }
+  & .el-color-picker__trigger {
+    border-color: var(--chromeBorderColor);
+    border-radius: var(--chromeRadius);
+  }
+}
+
 .offcial-themes {
   margin-top: 12px;
   display: grid;

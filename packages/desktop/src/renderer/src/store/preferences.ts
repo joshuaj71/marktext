@@ -92,6 +92,8 @@ export interface PreferencesState {
   followSystemTheme: boolean
   lightModeTheme: string
   darkModeTheme: string
+  // `#rrggbb` that replaces the active theme's accent; '' keeps the theme's own.
+  accentColor: string
   customCss: string
 
   // ----- Spellchecker -----
@@ -212,6 +214,7 @@ export const usePreferencesStore = defineStore('preferences', {
     followSystemTheme: true,
     lightModeTheme: 'light',
     darkModeTheme: 'dark',
+    accentColor: '',
     customCss: '',
 
     spellcheckerEnabled: false,

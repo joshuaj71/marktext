@@ -43,6 +43,7 @@ import { computed, watch, nextTick, onMounted, ref } from 'vue'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { addStyles, addThemeStyle, addCustomStyle, type AddStylesOptions } from '@/util/theme'
+import { applyAccentColor } from '@/util/accentColor'
 import Recent from '@/components/recent/index.vue'
 import EditorWithTabs from '@/components/editorWithTabs/index.vue'
 import TitleBar from '@/components/titleBar/index.vue'
@@ -77,7 +78,8 @@ const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const { windowActive, platform, init } = storeToRefs(mainStore)
 const { showTabBar } = storeToRefs(layoutStore)
-const { sourceCode, theme, customCss, textDirection, zoom } = storeToRefs(preferencesStore)
+const { sourceCode, theme, accentColor, customCss, textDirection, zoom } =
+  storeToRefs(preferencesStore)
 const { projectTree } = storeToRefs(projectStore)
 const { currentFile, selectionWordCount } = storeToRefs(editorStore)
 
@@ -105,7 +107,12 @@ const hasCurrentFile = computed<boolean>(() => {
 watch(theme, (value, oldValue) => {
   if (value !== oldValue) {
     addThemeStyle(value)
+    applyAccentColor(accentColor.value)
   }
+})
+
+watch(accentColor, (value) => {
+  applyAccentColor(value)
 })
 
 watch(customCss, (value, oldValue) => {
@@ -216,6 +223,7 @@ onMounted(async () => {
       hideScrollbar: init?.hideScrollbar ?? DEFAULT_STYLE.hideScrollbar
     }
     addStyles(style)
+    applyAccentColor(accentColor.value)
   })
 })
 </script>
