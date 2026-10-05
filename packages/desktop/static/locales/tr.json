@@ -754,6 +754,7 @@
     }
   },
   "about": {
+    "basedOn": "{name} tabanlıdır",
     "copyright": "Telif Hakkı © Luo Ran 2017-{year}",
     "copyrightContributors": "Github Katkıda Bulunanlar tarafından <3 ile yapıldı"
   },

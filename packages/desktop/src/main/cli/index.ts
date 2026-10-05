@@ -1,6 +1,7 @@
 import path from 'path'
 import { app } from 'electron'
 import os from 'os'
+import { APP_PRODUCT_NAME, APP_SLUG } from 'common/appIdentity'
 import { isDirectory } from 'common/filesystem'
 import parseArgs, { type ParsedArgs } from './parser'
 import { getPath } from '../utils'
@@ -12,12 +13,12 @@ const cli = (): ParsedArgs => {
   let argv = process.argv.slice(1)
   if (import.meta.env.DEV) {
     // Don't pass electron development arguments to MarkText and change user data path.
-    argv = ['--user-data-dir', path.join(getPath('appData'), 'marktext-dev')]
+    argv = ['--user-data-dir', path.join(getPath('appData'), `${APP_SLUG}-dev`)]
   }
 
   const args = parseArgs(argv, true)
   if (args['--help']) {
-    write(`Usage: marktext [commands] [path ...]
+    write(`Usage: ${APP_SLUG} [commands] [path ...]
 
   Available commands:
 
@@ -35,7 +36,7 @@ const cli = (): ParsedArgs => {
   }
 
   if (args['--version']) {
-    writeLine(`MarkText: ${MARKTEXT_VERSION_STRING}`)
+    writeLine(`${APP_PRODUCT_NAME}: ${MARKTEXT_VERSION_STRING}`)
     writeLine(`Node.js: ${process.versions.node}`)
     writeLine(`Electron: ${process.versions.electron}`)
     writeLine(`Chromium: ${process.versions.chrome}`)

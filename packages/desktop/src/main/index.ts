@@ -4,6 +4,7 @@ import { app, dialog, crashReporter } from 'electron'
 import log from 'electron-log'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 
+import { APP_ID, APP_PRODUCT_NAME } from 'common/appIdentity'
 import cli from './cli'
 import setupExceptionHandler, { initExceptionLogger } from './exceptionHandler'
 import setupEnvironment from './app/env'
@@ -14,6 +15,14 @@ import App from './app'
 import { t } from './i18n'
 import { registerSandboxIpcHandlers } from './ipc'
 import { setPlantumlServerSource } from './ipc/diagram'
+
+// Electron takes the app's name from package.json, where it is the
+// machine-facing slug, and captions untitled native dialogs with it. Linux is
+// left alone: it derives the window class from this name, and the desktop
+// entry's StartupWMClass is the slug.
+if (process.platform !== 'linux') {
+  app.setName(APP_PRODUCT_NAME)
+}
 
 // Set version strings into global and process.versions
 process.env.MARKTEXT_VERSION = MARKTEXT_VERSION
@@ -54,7 +63,7 @@ initializeLogger(appEnvironment)
 // Handles native level crashes
 crashReporter.start({
   companyName: '',
-  productName: 'MarkText',
+  productName: APP_PRODUCT_NAME,
   uploadToServer: false, // collect locally
   compress: true
 })
@@ -86,7 +95,7 @@ if (!process.mas && !import.meta.env.DEV) {
 registerSandboxIpcHandlers()
 
 // Windows-specific AppUserModelID
-electronApp.setAppUserModelId('com.electron.marktext')
+electronApp.setAppUserModelId(APP_ID)
 
 // Dev shortcuts and reload suppression
 app.on('browser-window-created', (_, window) => {

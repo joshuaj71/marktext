@@ -19,6 +19,10 @@ const script = readFileSync(
 
 const EXTENSIONS = ['.md', '.markdown', '.mmd', '.mdown', '.mdtxt', '.mdtext', '.mdx']
 
+// An NSIS `${NAME}` reference, spelled so that it is not read as a JavaScript
+// template placeholder.
+const nsisVar = (name: string): string => '$' + `{${name}}`
+
 const macroBody = (name: string): string => {
   const start = script.indexOf(`!macro ${name}`)
   expect(start, `the ${name} macro is missing`).toBeGreaterThan(-1)
@@ -32,7 +36,7 @@ const customUnInstall = macroBody('customUnInstall')
 
 describe('Windows Markdown file association (build/windows/installer.nsh)', () => {
   it('keeps the ProgId name an existing "Open with" choice points at', () => {
-    expect(script).toMatch(/!define\s+MT_PROGID\s+"MarkText\.Document"/)
+    expect(script).toMatch(/!define\s+MT_PROGID\s+"JoshuaMarkText\.Document"/)
   })
 
   it('registers without prompting, so no answer can leave the ProgId deleted', () => {
@@ -51,11 +55,13 @@ describe('Windows Markdown file association (build/windows/installer.nsh)', () =
   })
 
   it('quotes the executable path in every open command it writes', () => {
-    const commands = script.match(/shell\\open\\command[\s\S]*?marktext\.exe/g) ?? []
+    const commands = script.match(/shell\\open\\command[\s\S]*?\.exe/g) ?? []
     expect(commands.length, 'no open command is written').toBeGreaterThan(0)
     for (const command of commands) {
-      // Unquoted, `C:\Program Files\...\marktext.exe "%1"` runs `C:\Program`.
-      expect(command).toContain('"$INSTDIR\\marktext.exe')
+      // Unquoted, `C:\Program Files\...\app.exe "%1"` runs `C:\Program`.
+      // PRODUCT_FILENAME is electron-builder's define for the executable's
+      // base name, so the command follows `win.executableName`.
+      expect(command).toContain(`"$INSTDIR\\${nsisVar('PRODUCT_FILENAME')}.exe`)
     }
   })
 

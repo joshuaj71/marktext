@@ -754,6 +754,7 @@
     }
   },
   "about": {
+    "basedOn": "Basiert auf {name}",
     "copyright": "Copyright © Luo Ran 2017-{year}",
     "copyrightContributors": "Urheberrecht Mitwirkende"
   },

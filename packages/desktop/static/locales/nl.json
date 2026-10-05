@@ -754,6 +754,7 @@
     }
   },
   "about": {
+    "basedOn": "Gebaseerd op {name}",
     "copyright": "Copyright © Luo Ran 2017-{year}",
     "copyrightContributors": "Gemaakt met <3 door GitHub-bijdragers"
   },

@@ -1,5 +1,6 @@
 import path from 'path'
 import { shell, type BrowserWindow, type MenuItemConstructorOptions } from 'electron'
+import { APP_REPO_URL } from 'common/appIdentity'
 import { isFile } from 'common/filesystem'
 import * as actions from '../actions/help'
 import { checkUpdates } from '../actions/marktext'
@@ -41,7 +42,7 @@ export default function(): MenuItemConstructorOptions {
     {
       label: t('menu.help.changelog'),
       click() {
-        shell.openExternal('https://github.com/marktext/marktext/releases')
+        shell.openExternal(`${APP_REPO_URL}/releases`)
       }
     },
     {
@@ -71,13 +72,13 @@ export default function(): MenuItemConstructorOptions {
     {
       label: t('menu.help.reportBug'),
       click() {
-        shell.openExternal('https://github.com/marktext/marktext/issues')
+        shell.openExternal(`${APP_REPO_URL}/issues`)
       }
     },
     {
       label: t('menu.help.viewSource'),
       click() {
-        shell.openExternal('https://github.com/marktext/marktext')
+        shell.openExternal(APP_REPO_URL)
       }
     },
     {
@@ -86,7 +87,7 @@ export default function(): MenuItemConstructorOptions {
     {
       label: t('menu.help.license'),
       click() {
-        shell.openExternal('https://github.com/marktext/marktext/blob/develop/LICENSE')
+        shell.openExternal(`${APP_REPO_URL}/blob/develop/LICENSE`)
       }
     }
   ]

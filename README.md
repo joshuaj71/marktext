@@ -1,3 +1,5 @@
+> **Joshua MarkText** is a fork of [MarkText](https://github.com/marktext/marktext) with a redesigned interface and an adjustable accent colour. It installs as its own application, separate from the official MarkText, and keeps its own settings. [RELEASE_NOTES.md](RELEASE_NOTES.md) lists what differs; everything below is the upstream project's README.
+
 <p align="center"><img src="docs/assets/logo-small.png" alt="MarkText" width="100" height="100"></p>
 
 <h1 align="center">MarkText</h1>

@@ -27,6 +27,14 @@
             class="text"
             style="min-height: auto"
           >
+            {{ basedOn }}
+          </div>
+        </el-col>
+        <el-col :span="24">
+          <div
+            class="text"
+            style="min-height: auto"
+          >
             {{ copyright }}
           </div>
         </el-col>
@@ -46,10 +54,12 @@ import { useMainStore } from '@/store'
 import bus from '../../bus'
 import MarkTextLogo from '../../assets/images/logo.png'
 import { useI18n } from 'vue-i18n'
+import { APP_PRODUCT_NAME, UPSTREAM_PRODUCT_NAME } from 'common/appIdentity'
 
 const { t } = useI18n()
 
-const name = 'MarkText'
+const name = APP_PRODUCT_NAME
+const basedOn = t('about.basedOn', { name: UPSTREAM_PRODUCT_NAME })
 const copyright = t('about.copyright', { year: new Date().getFullYear() })
 const copyrightContributors = t('about.copyrightContributors')
 const showAboutDialog = ref(false)

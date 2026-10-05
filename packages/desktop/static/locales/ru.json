@@ -754,6 +754,7 @@
     }
   },
   "about": {
+    "basedOn": "Основано на {name}",
     "copyright": "Copyright © Luo Ran 2017-{year}",
     "copyrightContributors": "Сделано с <3 участниками GitHub"
   },

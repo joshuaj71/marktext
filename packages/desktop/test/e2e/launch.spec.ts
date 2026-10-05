@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import type { ElectronApplication, Page } from 'playwright'
+import { APP_PRODUCT_NAME } from '../../src/common/appIdentity'
 import { launchElectron } from './helpers'
 
 test.describe('Check Launch MarkText', () => {
@@ -18,6 +19,6 @@ test.describe('Check Launch MarkText', () => {
 
   test('Empty MarkText', async() => {
     const title = await page.title()
-    expect(/^MarkText|Untitled-1 - MarkText$/.test(title)).toBeTruthy()
+    expect([APP_PRODUCT_NAME, `Untitled-1 - ${APP_PRODUCT_NAME}`]).toContain(title)
   })
 })

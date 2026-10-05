@@ -9,6 +9,7 @@
 import { app, clipboard, crashReporter, dialog, ipcMain } from 'electron'
 import os from 'os'
 import log from 'electron-log'
+import { APP_PRODUCT_NAME } from 'common/appIdentity'
 // import { createAndOpenGitHubIssueUrl } from './utils/createGitHubIssue'
 import { t } from './i18n'
 
@@ -135,8 +136,8 @@ const setupExceptionHandler = (): void => {
 
   // start crashReporter to save core dumps to temporary folder
   crashReporter.start({
-    companyName: 'MarkText',
-    productName: 'MarkText',
+    companyName: APP_PRODUCT_NAME,
+    productName: APP_PRODUCT_NAME,
     submitURL: 'http://0.0.0.0/',
     uploadToServer: false,
     compress: true

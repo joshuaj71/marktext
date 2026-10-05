@@ -20,7 +20,7 @@
         class="title"
         @dblclick.stop="toggleMaxmizeOnMacOS"
       >
-        <span v-if="!filename">MarkText</span>
+        <span v-if="!filename">{{ APP_PRODUCT_NAME }}</span>
         <span v-else>
           <span
             class="save-dot"
@@ -154,6 +154,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { minimizePath, restorePath, maximizePath, closePath } from '../../assets/window-controls.js'
 import { PATH_SEPARATOR } from '../../config'
+import { APP_PRODUCT_NAME } from 'common/appIdentity'
 import { isMac as isOsxPlatform } from '@/util'
 import { shouldShowInAppTitleBar, tabsShareTitleBarRow } from './visibility'
 import { useEditorStore } from '@/store/editor'

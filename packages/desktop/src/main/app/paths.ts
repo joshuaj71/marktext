@@ -1,4 +1,6 @@
+import path from 'path'
 import { app } from 'electron'
+import { APP_SLUG } from 'common/appIdentity'
 import EnvPaths from 'common/envPaths'
 import { ensureDirSync } from 'common/filesystem'
 
@@ -10,8 +12,10 @@ class AppPaths extends EnvPaths {
    */
   constructor(userDataPath: string = '') {
     if (!userDataPath) {
-      // Use default user data path.
-      userDataPath = app.getPath('userData')
+      // Named explicitly rather than taken from Electron's default, which is
+      // derived from the package name and would be upstream MarkText's folder
+      // in an unpackaged run.
+      userDataPath = path.join(app.getPath('appData'), APP_SLUG)
     }
 
     // Initialize environment paths

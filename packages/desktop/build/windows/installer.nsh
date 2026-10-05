@@ -1,8 +1,17 @@
 ; installer.nsh — include via electron-builder's nsis.include
 
 ; Windows remembers an "Open with" choice as a UserChoice naming this ProgId,
-; and that pin outlives any reinstall, so the name must stay as it is.
-!define MT_PROGID "MarkText.Document"
+; and that pin outlives any reinstall, so the name must stay as it is. It is
+; this build's own rather than upstream MarkText's "MarkText.Document", so
+; installing or removing either app leaves the other's association alone.
+!define MT_PROGID "JoshuaMarkText.Document"
+
+; The ProgId electron-builder registers by itself: `fileAssociations[].name`
+; in electron-builder.yml.
+!define MT_BUILDER_PROGID "JoshuaMarkText.Markdown"
+
+; Settings folder under %APPDATA%: APP_SLUG in src/common/appIdentity.ts.
+!define MT_SETTINGS_DIR "joshua-marktext"
 
 ;======================================================================
 ; Markdown file associations.
@@ -46,18 +55,17 @@
   !insertmacro mtAssociateExtension ".mdx"
 
   WriteRegStr SHELL_CONTEXT "Software\Classes\${MT_PROGID}" \
-    "" "MarkText Markdown Document"
+    "" "${PRODUCT_NAME} Markdown Document"
   WriteRegExpandStr SHELL_CONTEXT "Software\Classes\${MT_PROGID}\DefaultIcon" \
     "" "$INSTDIR\resources\icons\md.ico,0"
   WriteRegExpandStr SHELL_CONTEXT "Software\Classes\${MT_PROGID}\shell\open\command" \
-    "" '"$INSTDIR\marktext.exe" "%1"'
+    "" '"$INSTDIR\${PRODUCT_FILENAME}.exe" "%1"'
 
-  ; electron-builder writes the command for its own ProgId — `Markdown`, the
-  ; `fileAssociations[].name` in electron-builder.yml — with the executable
+  ; electron-builder writes the command for its own ProgId with the executable
   ; path unquoted, which runs `C:\Program` when the directory the user picked
   ; during setup contains a space.
-  WriteRegStr SHELL_CONTEXT "Software\Classes\Markdown\shell\open\command" \
-    "" '"$INSTDIR\marktext.exe" "%1"'
+  WriteRegStr SHELL_CONTEXT "Software\Classes\${MT_BUILDER_PROGID}\shell\open\command" \
+    "" '"$INSTDIR\${PRODUCT_FILENAME}.exe" "%1"'
 
   ; Explorer serves file types from a cache that a fresh install otherwise
   ; keeps until the next sign-in.
@@ -82,6 +90,6 @@
 
   MessageBox MB_YESNO "Do you want to delete user settings?" /SD IDNO IDNO SkipRemoval
     SetShellVarContext current
-    RMDir /r "$APPDATA\marktext"
+    RMDir /r "$APPDATA\${MT_SETTINGS_DIR}"
   SkipRemoval:
 !macroend

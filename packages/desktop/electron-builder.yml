@@ -1,5 +1,19 @@
-appId: com.github.marktext.marktext
-productName: MarkText
+# Identity of this build; mirrors src/common/appIdentity.ts (the two are
+# compared by test/unit/specs/app-identity.spec.ts).
+appId: com.github.joshuaj71.marktext
+productName: Joshua MarkText
+# Renames the packaged app without renaming the workspace package, which the
+# root scripts and CI address as `--filter marktext`. The packaged name is what
+# Electron reports as the app's name and what electron-updater names its
+# download cache after, so it must not be upstream's.
+extraMetadata:
+  name: joshua-marktext
+# Where an installed copy looks for updates, and where the release workflow's
+# `latest*.yml` files are published.
+publish:
+  provider: github
+  owner: joshuaj71
+  repo: marktext
 directories:
   buildResources: build
   output: ../../dist
@@ -74,52 +88,56 @@ electronLanguages: # Keep Chromium/AppKit locales for the UI languages MarkText 
 
 asarUnpack:
   - resources/**
+# `name` becomes the ProgId electron-builder registers on Windows, a registry
+# key under Software\Classes that every app naming it shares. A name of this
+# build's own keeps installing or uninstalling it from touching the key of
+# another Markdown editor (upstream MarkText registers `Markdown`).
 fileAssociations:
   - ext: md
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
   - ext: markdown
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
   - ext: mmd
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
   - ext: mdown
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
   - ext: mdtxt
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
   - ext: mdtext
-    name: Markdown
+    name: JoshuaMarkText.Markdown
     description: Markdown document
     mimeType: text/markdown
     role: Editor
     icon: icons/md.ico
 win:
-  executableName: marktext
-  artifactName: 'marktext-win-${arch}-${version}.${ext}'
+  executableName: joshua-marktext
+  artifactName: 'joshua-marktext-win-${arch}-${version}.${ext}'
   target:
     - target: 'nsis'
     - target: 'zip'
   icon: static/icon.ico
 nsis:
-  artifactName: 'marktext-win-${arch}-${version}-setup.${ext}'
+  artifactName: 'joshua-marktext-win-${arch}-${version}-setup.${ext}'
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: true
@@ -129,7 +147,7 @@ nsis:
   perMachine: false
   include: windows/installer.nsh
 mac:
-  artifactName: 'marktext-mac-${arch}-${version}.${ext}'
+  artifactName: 'joshua-marktext-mac-${arch}-${version}.${ext}'
   entitlementsInherit: build/mac/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
@@ -141,7 +159,7 @@ mac:
     - dmg
     - zip
 dmg:
-  artifactName: 'marktext-mac-${arch}-${version}.${ext}'
+  artifactName: 'joshua-marktext-mac-${arch}-${version}.${ext}'
   contents:
     - x: 410
       y: 240
@@ -151,18 +169,18 @@ dmg:
       y: 240
       type: 'file'
 linux:
-  artifactName: 'marktext-linux-${version}.${ext}'
-  executableName: 'marktext'
+  artifactName: 'joshua-marktext-linux-${version}.${ext}'
+  executableName: 'joshua-marktext'
   description: 'A simple and elegant open-source markdown editor that focused on speed and usability.'
-  maintainer: 'MarkText Contributors'
+  maintainer: 'joshuaj71'
   category: 'Office;TextEditor;Utility'
   mimeTypes:
     - 'text/markdown'
   icon: 'static/icon.png'
   desktop:
     entry:
-      StartupWMClass: 'marktext'
-      Keywords: 'marktext;'
+      StartupWMClass: 'joshua-marktext'
+      Keywords: 'marktext;markdown;'
   target:
     - AppImage
     - snap
