@@ -13,10 +13,13 @@ import {
   accentFollowerValue,
   applyAccentColor,
   buildAccentCss,
+  contrastRatio,
   hexToHsl,
   hexToRgb,
   hslToHex,
   isAccentColor,
+  MIN_TEXT_CONTRAST,
+  readableOn,
   readableTextOn,
   rgbToHex
 } from '@/util/accentColor'
@@ -90,6 +93,40 @@ describe('accent colour', () => {
     expect(readableTextOn('#4285f4')).toBe('#ffffff')
     expect(readableTextOn('#00c9ff')).toBe('#1f1f1f')
     expect(readableTextOn('#ffffff')).toBe('#1f1f1f')
+  })
+
+  it('measures contrast the WCAG way', () => {
+    expect(contrastRatio('#000000', '#ffffff')).toBeCloseTo(21, 5)
+    expect(contrastRatio('#ffffff', '#000000')).toBeCloseTo(21, 5)
+    expect(contrastRatio('#4285f4', '#4285f4')).toBe(1)
+    expect(contrastRatio('#4285f4', '#ffffff')).toBeCloseTo(3.56, 2)
+  })
+
+  it('shades every preset just enough to read as text on light and dark themes', () => {
+    for (const background of ['#ffffff', '#282828', '#fdf6e3', '#1e1e2e']) {
+      for (const { color } of ACCENT_PRESETS) {
+        const text = readableOn(color, background)
+        expect(contrastRatio(text, background)).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST)
+        if (contrastRatio(color, background) >= MIN_TEXT_CONTRAST) {
+          expect(text).toBe(color)
+        } else {
+          // Same hue, and no more than a step past the threshold.
+          expect(Math.abs(hexToHsl(text).h - hexToHsl(color).h)).toBeLessThan(3)
+          const oneStepBack = hslToHex({
+            ...hexToHsl(text),
+            l: hexToHsl(text).l + (contrastRatio(background, '#000000') > 10 ? 0.01 : -0.01)
+          })
+          expect(contrastRatio(oneStepBack, background)).toBeLessThan(MIN_TEXT_CONTRAST + 0.15)
+        }
+      }
+    }
+  })
+
+  it('darkens a faint accent on white and lightens a deep one on a dark theme', () => {
+    const pinkLink = readableOn('#d48a9a', '#ffffff')
+    expect(hexToHsl(pinkLink).l).toBeLessThan(hexToHsl('#d48a9a').l)
+    const kleinLink = readableOn('#002fa7', '#282828')
+    expect(hexToHsl(kleinLink).l).toBeGreaterThan(hexToHsl('#002fa7').l)
   })
 
   it('follows the accent only where the theme used it', () => {

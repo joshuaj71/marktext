@@ -6,6 +6,11 @@ import { launchWithMarkdown } from './helpers'
 // every editor window, live, on top of whichever theme is active.
 
 const GOOGLE_BLUE = 'rgba(66, 133, 244, 1)'
+// Google Blue as link text: at 3.6:1 on the light theme's white and 4.1:1 on
+// the dark theme's #282828 it falls short of 4.5:1, so links get the nearest
+// shade of it that reaches that.
+const GOOGLE_BLUE_LINK_ON_LIGHT = 'rgb(32, 111, 242)'
+const GOOGLE_BLUE_LINK_ON_DARK = 'rgb(80, 142, 245)'
 
 const openThemePreferences = async(app: ElectronApplication): Promise<Page> => {
   const settingsWindow = app.waitForEvent('window')
@@ -64,7 +69,7 @@ test.describe('Accent colour', () => {
     await settings.locator('.accent-swatch[title="Google Blue"]').click()
     await expect.poll(() => themeColor(page)).toBe(GOOGLE_BLUE)
     expect(await themeColor(settings)).toBe(GOOGLE_BLUE)
-    expect(await linkColor(page)).toBe('rgb(66, 133, 244)')
+    expect(await linkColor(page)).toBe(GOOGLE_BLUE_LINK_ON_LIGHT)
     await expect(settings.locator('.accent-swatch[title="Google Blue"]')).toHaveClass(/active/)
     await expect(settings.locator('.accent-value')).toHaveText('#4285F4')
 
@@ -89,7 +94,7 @@ test.describe('Accent colour', () => {
     expect(await themeColor(page)).toBe(GOOGLE_BLUE)
     // The dark theme hard-codes its link colour to its own accent; the custom
     // accent has to take that over too.
-    expect(await linkColor(page)).toBe('rgb(66, 133, 244)')
+    expect(await linkColor(page)).toBe(GOOGLE_BLUE_LINK_ON_DARK)
   })
 
   test('dragging the hue slider changes the hue and keeps the tone', async() => {
@@ -111,5 +116,30 @@ test.describe('Accent colour', () => {
     expect(hue).toBeGreaterThan(40)
     expect(hue).toBeLessThan(110)
     expect(await themeColor(page)).toBe(await themeColor(settings))
+  })
+})
+
+test.describe('Accent colour in the theme previews', () => {
+  test('the cards show a custom accent, readable on each background', async() => {
+    const { app } = await launchWithMarkdown('# Previews\n', {
+      preferences: { theme: 'light', followSystemTheme: false, accentColor: '#d48a9a' }
+    })
+    try {
+      const settings = await openThemePreferences(app)
+      const cardLink = (name: string): Promise<string> =>
+        settings.locator(`.offcial-themes .theme.${name} a`).evaluate((a) => getComputedStyle(a).color)
+      await settings.waitForSelector('.offcial-themes .theme.light a')
+      // Dusty Pink is too faint on white, so the light card darkens it ...
+      const onLight = await cardLink('light')
+      expect(onLight).not.toBe('rgb(212, 138, 154)')
+      expect(onLight).not.toBe('rgb(23, 133, 91)')
+      // ... while on the dark card it already reads as it is.
+      expect(await cardLink('dark')).toBe('rgb(212, 138, 154)')
+
+      await settings.locator('.accent-swatch.theme-default').click()
+      await expect.poll(() => cardLink('light')).toBe('rgb(23, 133, 91)')
+    } finally {
+      await app.close()
+    }
   })
 })

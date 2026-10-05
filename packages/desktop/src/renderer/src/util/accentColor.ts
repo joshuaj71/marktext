@@ -45,6 +45,15 @@ const TINT_HUE_TOLERANCE = 15
 // Below this saturation a colour is a grey, whose hue means nothing.
 const TINT_MIN_SATURATION = 0.25
 
+// Followers drawn as text on the editor background. A light accent (Dusty
+// Pink, Nokia Light Blue) is too faint for them on a light theme, and a dark
+// one on a dark theme, so they get a shade of it that reads; the rest of the
+// accent's uses are surfaces and marks, where the accent's own tone is the point.
+const TEXT_FOLLOWERS: ReadonlySet<string> = new Set(['--linkColor', '--emColor'])
+
+// WCAG 2 AA for body text.
+export const MIN_TEXT_CONTRAST = 4.5
+
 const ALPHA_STEPS = [90, 80, 70, 60, 50, 40, 30, 20, 10] as const
 
 // Below this contrast against white, text on the accent switches to dark.
@@ -113,6 +122,36 @@ const relativeLuminance = (hex: string): number => {
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
   }) as Rgb
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+/** WCAG 2 contrast ratio of two `#rrggbb` colours, [1, 21]. */
+export const contrastRatio = (a: string, b: string): number => {
+  const [lighter, darker] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x)
+  return (lighter! + 0.05) / (darker! + 0.05)
+}
+
+/**
+ * `color` as text on `background`: unchanged when it already reaches
+ * `minContrast`, otherwise darkened (on a light background) or lightened (on
+ * a dark one) just enough to, keeping its hue and saturation.
+ */
+export const readableOn = (
+  color: string,
+  background: string,
+  minContrast: number = MIN_TEXT_CONTRAST
+): string => {
+  if (contrastRatio(color, background) >= minContrast) return color
+  const towardsBlack = contrastRatio(background, '#000000') >= contrastRatio(background, '#ffffff')
+  const hsl = hexToHsl(color)
+  // One percent of lightness at a time: fine enough that the result stays
+  // as close to the accent as the contrast allows.
+  for (let step = 1; step <= 100; step++) {
+    const l = towardsBlack ? hsl.l - step / 100 : hsl.l + step / 100
+    if (l < 0 || l > 1) break
+    const candidate = hslToHex({ ...hsl, l })
+    if (contrastRatio(candidate, background) >= minContrast) return candidate
+  }
+  return towardsBlack ? '#000000' : '#ffffff'
 }
 
 /**
@@ -234,12 +273,20 @@ export const applyAccentColor = (color: string | null | undefined): void => {
   // Emptied before measuring, so the comparison sees the theme's own values.
   style.textContent = ''
   const themeAccent = rgbStringToHex(resolveColor('var(--themeColor)'))
+  const background = rgbStringToHex(resolveColor('var(--editorBgColor)'))
   const followers: Array<readonly [string, string]> = []
   for (const name of ACCENT_FOLLOWERS) {
     const themeValue = rgbStringToHex(resolveColor(`var(${name})`))
     if (!themeAccent || !themeValue) continue
     const value = accentFollowerValue(themeAccent, themeValue, accent)
-    if (value) followers.push([name, value])
+    if (!value) continue
+    if (background && TEXT_FOLLOWERS.has(name)) {
+      const shade = value === 'var(--themeColor)' ? accent : value
+      const readable = readableOn(shade, background)
+      followers.push([name, readable === shade ? value : readable])
+    } else {
+      followers.push([name, value])
+    }
   }
   style.textContent = buildAccentCss(accent, followers)
 

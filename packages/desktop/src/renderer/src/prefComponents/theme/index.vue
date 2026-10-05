@@ -115,9 +115,11 @@
           themeItem.name,
           {
             active: themeItem.name === theme,
-            disabled: followSystemTheme
+            disabled: followSystemTheme,
+            'custom-accent': !!cardAccent
           }
         ]"
+        :style="cardAccent ? { '--previewLinkColor': previewLinkColor(themeItem.name) } : undefined"
         @click="!followSystemTheme && onSelectChange('theme', themeItem.name)"
       >
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -212,8 +214,10 @@ import {
   hexToHsl,
   hslToHex,
   isAccentColor,
+  readableOn,
   type Hsl
 } from '@/util/accentColor'
+import { getThemeBackgroundColor } from 'common/theme'
 import { APP_ICON_VARIANTS } from 'common/appIcon'
 import { appIconUrl, markdownIconUrl, resolveAppIcon } from '@/util/appIcon'
 import { isWindows } from '@/util'
@@ -259,6 +263,16 @@ const shownAccent = computed<string>(() => {
   return isAccentColor(accentColor.value) ? accentColor.value.toLowerCase() : themeAccent.value
 })
 const shownHue = computed<number>(() => Math.round(hexToHsl(shownAccent.value).h))
+
+// The custom accent, while one is set or being dragged; the cards then show
+// it in place of each theme's own link colour, shaded for that theme's
+// background the way the editor shades links. (A theme whose links have a hue
+// of their own keeps it in the editor; the cards do not tell those apart.)
+const cardAccent = computed<string | null>(() =>
+  draftAccent.value || isAccentColor(accentColor.value) ? shownAccent.value : null
+)
+const previewLinkColor = (themeName: string): string =>
+  readableOn(cardAccent.value ?? shownAccent.value, getThemeBackgroundColor(themeName))
 
 const commitAccent = (color: string): void => {
   draftAccent.value = null
@@ -772,6 +786,10 @@ const onSelectChange = (type: keyof PreferencesState, value: unknown): void => {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+/* After the per-theme link colours above, which it overrides. */
+.offcial-themes .theme.custom-accent a {
+  color: var(--previewLinkColor);
 }
 
 .custom-css {
