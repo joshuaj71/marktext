@@ -65,7 +65,7 @@
         </div>
         <div class="button-group">
           <button
-            class="button right"
+            class="find-button find-previous"
             @click="find('previous')"
           >
             <el-icon :size="14">
@@ -73,7 +73,7 @@
             </el-icon>
           </button>
           <button
-            class="button"
+            class="find-button find-next"
             @click="find('next')"
           >
             <el-icon :size="14">
@@ -103,7 +103,7 @@
             :open-delay="1000"
           >
             <button
-              class="button right"
+              class="find-button replace-all"
               @click="replace(false)"
             >
               <el-icon :size="14">
@@ -120,7 +120,7 @@
             :open-delay="1000"
           >
             <button
-              class="button"
+              class="find-button replace-single"
               @click="replace(true)"
             >
               <el-icon :size="14">
@@ -363,30 +363,32 @@ const replace = (isSingle = true) => {
 <style scoped>
 .search-bar {
   position: absolute;
-  width: 400px;
-  padding: 0;
-  top: 0;
-  right: 20px;
-  border-radius: 3px;
-  box-shadow: var(--floatShadow);
-  background: var(--floatBgColor);
+  top: 8px;
+  right: 24px;
+  width: 420px;
+  padding: 6px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
+  gap: 4px;
+  font-family: var(--uiFontFamily);
+  border-radius: var(--surfaceRadius);
+  box-shadow: var(--surfaceShadow);
+  background: var(--floatBgColor);
 }
 .search-bar .left-arrow {
-  width: 20px;
   flex-shrink: 0;
+  width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  color: var(--iconColor);
   cursor: pointer;
+  transition: background-color 0.12s ease-in-out;
 }
 .search-bar .left-arrow:hover {
-  background: var(--floatHoverColor);
-}
-.search-bar .left-arrow svg {
-  height: 12px;
-  width: 12px;
+  background: var(--chromeHoverBgColor);
 }
 .search-bar .left-arrow .arrow-right {
   transform: rotate(-90deg);
@@ -394,117 +396,142 @@ const replace = (isSingle = true) => {
 
 .search-bar .right-controls {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .search,
 .replace {
-  height: 28px;
   display: flex;
-  padding: 4px 10px 0 4px;
-  margin-bottom: 5px;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
 }
 
-.search-bar .button {
-  outline: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  height: 28px;
-  width: 28px;
-  text-align: center;
-  padding: 5px;
-  display: inline-block;
-  font-weight: 500;
-  color: var(--sideBarIconColor);
-  &.left {
-    margin-right: 10px;
-  }
-  &.right {
-    margin-left: 10px;
-  }
-}
-.button.active {
-  color: var(--themeColor);
-}
-.search-bar .button > svg {
-  width: 16px;
-  height: 16px;
-}
-.search-bar .button:active {
-  opacity: 0.5;
-}
-.input-wrapper {
+.button-group {
   display: flex;
-  flex: 1;
+  gap: 2px;
+}
+.find-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  outline: none;
+  background: transparent;
+  color: var(--iconColor);
+  cursor: pointer;
+  transition: background-color 0.12s ease-in-out;
+}
+.find-button:hover {
+  background: var(--chromeHoverBgColor);
+  color: var(--editorColor);
+}
+.find-button:active {
+  background: var(--chromeActiveBgColor);
+}
+.find-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--themeColor50);
+}
+
+.input-wrapper {
   position: relative;
-  border: 1px solid var(--inputBgColor);
-  background: var(--inputBgColor);
-  border-radius: 3px;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  box-sizing: border-box;
+  border: 1px solid var(--chromeBorderColor);
+  border-radius: 6px;
+  background: transparent;
   overflow: visible;
+  transition:
+    border-color 0.12s ease-in-out,
+    box-shadow 0.12s ease-in-out;
+}
+.input-wrapper:focus-within {
+  border-color: var(--themeColor);
+  box-shadow: 0 0 0 3px var(--themeColor20);
 }
 .input-wrapper.error {
-  border: 1px solid var(--notificationErrorBg);
+  border-color: var(--notificationErrorBg);
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 .input-wrapper .controls {
   position: absolute;
-  top: 6px;
-  right: 10px;
-  font-size: 12px;
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
   display: flex;
-  color: var(--sideBarTitleColor);
+  align-items: center;
+  gap: 1px;
+  font-size: 12px;
+  color: var(--editorColor50);
   & > span.search-result {
-    height: 20px;
-    margin-right: 5px;
-    line-height: 17px;
+    margin-right: 4px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
   & > span:not(.search-result) {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin-left: 2px;
-    margin-right: 2px;
-    &:hover {
-      color: var(--sideBarIconColor);
-    }
     & > svg {
-      fill: var(--sideBarIconColor);
-      &:hover {
-        fill: var(--highlightThemeColor);
-      }
+      fill: var(--iconColor);
     }
-    &.active svg {
-      fill: var(--highlightThemeColor);
+    &:hover {
+      background: var(--chromeHoverBgColor);
+    }
+    &.active {
+      background: var(--themeColor20);
+      & > svg {
+        fill: var(--themeColor);
+      }
     }
   }
 }
 
 .input-wrapper .error-msg {
   position: absolute;
-  top: 27px;
-  width: calc(100% + 2px);
-  height: 28px;
+  top: calc(100% + 1px);
   left: -1px;
-  padding: 0 8px;
+  width: calc(100% + 2px);
+  padding: 4px 8px;
   box-sizing: border-box;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   background: var(--notificationErrorBg);
-  line-height: 28px;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 18px;
   z-index: 1;
 }
 
 .input-wrapper input {
   flex: 1;
+  min-width: 0;
+  height: 100%;
   padding: 0 8px;
-  height: 26px;
-  outline: none;
-  border: none;
   box-sizing: border-box;
-  font-size: 14px;
-  color: var(--editorColor);
-  padding: 0 8px;
+  border: none;
+  outline: none;
   background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--editorColor);
+}
+/* Room for the match count and the three toggles. */
+.search .input-wrapper input {
+  padding-right: 122px;
 }
 </style>

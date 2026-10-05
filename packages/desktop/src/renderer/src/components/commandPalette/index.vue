@@ -11,6 +11,18 @@
       <template #title>
         <div class="search-wrapper">
           <div class="input-wrapper">
+            <svg
+              class="search-icon"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+            >
+              <circle
+                cx="7"
+                cy="7"
+                r="4.5"
+              />
+              <path d="m10.5 10.5 3 3" />
+            </svg>
             <input
               ref="searchInput"
               v-model="query"
@@ -358,38 +370,54 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 500px;
+  width: 560px;
   height: auto;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  padding: 8px;
-  margin: 0 auto;
-  margin-top: 8px;
+  padding: 6px;
+  margin: 8px auto 0;
   box-sizing: border-box;
+  font-family: var(--uiFontFamily);
   color: var(--editorColor);
   background: var(--floatBgColor);
-  border: 1px solid var(--floatBorderColor);
-  border-radius: 4px;
-  box-shadow: 0 3px 8px 3px var(--floatShadow);
+  border-radius: 12px;
+  box-shadow: var(--surfaceShadow);
   z-index: 10000;
 }
 .input-wrapper {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
-  border: 1px solid var(--inputBgColor);
-  background: var(--inputBgColor);
-  border-radius: 3px;
+  padding: 2px 10px 8px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--chromeBorderColor);
+}
+.search-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--editorColor50);
+  stroke-width: 1.4;
+  stroke-linecap: round;
 }
 input.search {
-  width: 100%;
-  height: 30px;
-  margin: 0 10px;
-  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 15px;
   color: var(--editorColor);
   background: transparent;
   outline: none;
   border: none;
+}
+input.search::placeholder {
+  color: var(--editorColor40);
 }
 .cpt-loading {
   position: relative;
@@ -404,10 +432,11 @@ input.search {
 ul.commands {
   display: flex;
   flex-direction: column;
+  gap: 1px;
   width: 100%;
-  max-height: 300px;
+  max-height: 360px;
   padding: 0;
-  margin: 8px 0 0 0;
+  margin: 6px 0 0 0;
   box-sizing: border-box;
   list-style: none;
   overflow: hidden;
@@ -415,24 +444,24 @@ ul.commands {
 }
 ul.commands li {
   position: relative;
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   max-width: 100%;
-  height: 35px;
-  padding: 0 8px;
-  font-size: 14px;
-  line-height: 35px;
-  text-overflow: ellipsis;
+  height: 34px;
+  padding: 0 10px;
+  font-size: 13.5px;
+  border-radius: 6px;
   cursor: pointer;
 }
 ul.commands li:hover {
-  background: var(--floatHoverColor);
-  opacity: 0.9;
+  background: var(--chromeHoverBgColor);
 }
 ul.commands li.active {
-  background: var(--floatHoverColor);
+  background: var(--chromeActiveBgColor);
 }
 ul.commands li span {
   text-overflow: ellipsis;
@@ -440,21 +469,22 @@ ul.commands li span {
   white-space: nowrap;
 }
 ul.commands li span.shortcut {
-  font-size: 12px;
-  line-height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  gap: 3px;
+  font-size: 11px;
 }
 ul.commands li span.shortcut > kbd {
   display: inline-block;
-  margin-left: 4px;
-  padding: 1px 7px;
-  min-width: 10px;
+  min-width: 12px;
+  padding: 0 6px;
   text-align: center;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 18px;
-  color: var(--editorColor);
-  background: var(--floatBgColor);
-  border: 1px solid var(--floatBorderColor);
+  color: var(--editorColor60);
+  background: var(--chromeHoverBgColor);
+  border: 1px solid var(--chromeBorderColor);
   border-radius: 4px;
 }
 
@@ -483,5 +513,10 @@ ul.commands li span.shortcut > kbd {
 }
 .command-palette .el-dialog__body {
   display: none !important;
+}
+/* The palette floats over the document like a menu; dimming it as for a
+   dialog would hide the text a command is about to act on. */
+.command-palette .el-overlay {
+  background-color: transparent;
 }
 </style>

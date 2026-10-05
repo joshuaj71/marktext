@@ -19,6 +19,7 @@ import routes from './router'
 import Main from './Main.vue'
 
 import './assets/styles/index.css'
+import './assets/styles/surfaces.css'
 import './assets/styles/printService.css'
 
 // -----------------------------------------------

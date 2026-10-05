@@ -64,8 +64,8 @@ const RESULT_COUNTER = '.search-bar .search-result'
 // Replace-all = RefreshRight button (`replace(false)`), the `.right` button in
 // the replace row. Replace-single = Switch button (`replace(true)`), the one
 // without `.right`.
-const REPLACE_ALL_BTN = '.search-bar .replace .button-group .button.right'
-const REPLACE_SINGLE_BTN = '.search-bar .replace .button-group .button:not(.right)'
+const REPLACE_ALL_BTN = '.search-bar .replace .replace-all'
+const REPLACE_SINGLE_BTN = '.search-bar .replace .replace-single'
 
 const isTabDirty = (page: Page): Promise<boolean> =>
   page.evaluate(() => !!document.querySelector('.editor-tabs li.unsaved'))

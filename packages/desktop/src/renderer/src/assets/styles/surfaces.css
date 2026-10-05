@@ -1,0 +1,230 @@
+/* Floating surfaces: the editor's menus, toolbars and pickers (drawn by
+   @muyajs/core), dialogs, the find bar and the command palette. They share the
+   window chrome's tokens (index.css), so every theme restyles them too.
+
+   Muya's own sheet loads with the editor, after this one; the `body` prefix
+   outranks its single-class rules without touching the engine. */
+
+:root {
+  --surfaceRadius: 10px;
+  /* A hairline ring, then a soft drop; the ring keeps the edge on a background
+     of the same colour, where a shadow alone fades out. */
+  --surfaceShadow:
+    0 0 0 1px var(--chromeBorderColor), 0 12px 32px -8px rgba(0, 0, 0, 0.22),
+    0 3px 8px -3px rgba(0, 0, 0, 0.12);
+
+  /* Element Plus colours its primary controls (active tabs, focus rings,
+     switches) with its own blue unless told otherwise. */
+  --el-color-primary: var(--themeColor);
+  --el-color-primary-light-3: color-mix(in srgb, var(--themeColor) 70%, #ffffff);
+  --el-color-primary-light-5: color-mix(in srgb, var(--themeColor) 50%, #ffffff);
+  --el-color-primary-light-7: color-mix(in srgb, var(--themeColor) 30%, #ffffff);
+  --el-color-primary-light-8: color-mix(in srgb, var(--themeColor) 20%, #ffffff);
+  --el-color-primary-light-9: color-mix(in srgb, var(--themeColor) 10%, #ffffff);
+  --el-color-primary-dark-2: color-mix(in srgb, var(--themeColor) 80%, #000000);
+  /* Behind dialogs: dims the window without blacking it out. */
+  --el-overlay-color-lighter: rgba(0, 0, 0, 0.28);
+}
+
+/* ------------------------------------------------------------------ dialogs */
+
+.el-dialog,
+.el-dialog.ag-dialog-table {
+  border: none;
+  border-radius: 12px;
+  box-shadow: var(--surfaceShadow);
+  background-color: var(--floatBgColor);
+  font-family: var(--uiFontFamily);
+}
+
+.el-dialog .el-dialog__title,
+.el-dialog .dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--editorColor);
+}
+
+/* Some dialogs put their title in the body as a plain heading, which the
+   dark themes would otherwise leave in a faint grey. */
+.el-dialog h3 {
+  color: var(--editorColor);
+}
+
+.el-tabs__item.is-active,
+.el-tabs__item:hover {
+  color: var(--themeColor);
+}
+
+.el-tabs__active-bar {
+  background-color: var(--themeColor);
+}
+
+.el-tabs__nav-wrap::after {
+  height: 1px;
+  background: var(--chromeBorderColor);
+}
+
+/* ------------------------------------------------- the editor's floating UI */
+
+body .mu-float-wrapper {
+  border-radius: var(--surfaceRadius);
+  box-shadow: var(--surfaceShadow);
+  font-family: var(--uiFontFamily);
+}
+
+/* Toolbars: one row of icon buttons. A button's hover pill sits inside the
+   bar's rounded ends instead of running into them. */
+body .mu-float-wrapper.mu-format-picker-container,
+body .mu-float-wrapper.mu-image-toolbar-container,
+body .mu-float-wrapper.mu-link-tools-container {
+  border-radius: 8px;
+}
+
+body .mu-format-picker li.item,
+body .mu-image-toolbar li.item,
+body .mu-link-tools li.item {
+  height: 24px;
+  margin: 2px 0;
+  border-radius: 5px;
+  transition: background-color 0.12s ease-in-out;
+}
+
+body .mu-format-picker li.item:hover,
+body .mu-image-toolbar li.item:hover,
+body .mu-link-tools li.item:hover {
+  background: var(--chromeHoverBgColor);
+}
+
+body .mu-format-picker li.item:last-of-type::before,
+body .mu-image-toolbar li.item:first-of-type::before,
+body .mu-image-toolbar li.item:last-of-type::before,
+body .mu-link-tools li.item:last-of-type::before {
+  top: 4px;
+  height: 16px;
+  background: var(--chromeBorderColor);
+}
+
+/* Menus: rows inset from the edges, each with a rounded highlight. */
+body .mu-front-menu {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+body .mu-front-menu > ul {
+  padding: 6px;
+}
+
+body .mu-front-menu > ul li.item {
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
+body .mu-front-menu > ul li.item:hover {
+  background: var(--chromeHoverBgColor);
+}
+
+body .mu-front-menu li .icon-wrapper {
+  width: 24px;
+  height: 24px;
+}
+
+body .mu-front-menu > ul li > .short-cut {
+  color: var(--editorColor50);
+  font-size: 12px;
+}
+
+body .mu-front-menu > ul li.divider {
+  width: auto;
+  margin: 4px 8px;
+  background: var(--chromeBorderColor);
+}
+
+body .mu-front-menu li.turn-into-menu {
+  padding: 0 4px 2px;
+}
+
+body .mu-front-menu li.turn-into-menu .turn-into-item {
+  border-radius: 6px;
+}
+
+body .mu-front-menu li.turn-into-menu .turn-into-item:hover {
+  background: var(--chromeHoverBgColor);
+}
+
+body .mu-quick-insert {
+  padding: 0 6px 6px;
+  font-size: 13px;
+}
+
+/* Section labels, like the sidebar's. */
+body .mu-quick-insert .title {
+  padding: 10px 8px 4px;
+  color: var(--editorColor50);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+body .mu-quick-insert .item {
+  height: 30px;
+  border-radius: 6px;
+}
+
+body .mu-quick-insert .active,
+body .mu-quick-insert div.item:hover {
+  background-color: var(--chromeActiveBgColor);
+}
+
+body .mu-quick-insert .icon-container {
+  margin-left: 8px;
+}
+
+body .mu-quick-insert .short-cut {
+  color: var(--editorColor50);
+  font-size: 12px;
+}
+
+body .mu-list-picker {
+  padding: 6px;
+}
+
+body .mu-list-picker .item {
+  border-radius: 6px;
+}
+
+body .mu-list-picker .item:hover,
+body .mu-list-picker .item.active {
+  background-color: var(--chromeActiveBgColor);
+}
+
+body .mu-image-picker-wrapper .mu-list-picker .item {
+  border-radius: 6px;
+}
+
+body .mu-image-picker-wrapper .mu-list-picker .item:hover,
+body .mu-image-picker-wrapper .mu-list-picker .item.active {
+  background-color: var(--chromeActiveBgColor);
+}
+
+body .mu-emoji-picker .title {
+  color: var(--editorColor50);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+body .mu-emoji-picker section .emoji-wrapper .item {
+  border-radius: 6px;
+}
+
+body .mu-emoji-picker .active,
+body .mu-emoji-picker .item:hover {
+  background-color: var(--chromeActiveBgColor);
+}
+
+body .mu-footnote-tool-container,
+body .mu-image-selector-wrapper {
+  border-radius: var(--surfaceRadius);
+}

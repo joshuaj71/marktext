@@ -231,13 +231,6 @@ body {
   color: var(--editorColor);
 }
 
-.el-dialog,
-.el-dialog.ag-dialog-table {
-  border-radius: 8px;
-  box-shadow: 0 4px 8px 0 var(--floatBorderColor);
-  border: solid 1px var(--floatBorderColor);
-  background-color: var(--floatBgColor);
-}
 .el-dialog__header {
   position: relative;
   display: block;
@@ -264,10 +257,6 @@ input.el-input__inner {
 
 .el-input-number.is-controls-right span.el-input-number__increase {
   border-bottom: none;
-}
-
-.el-tabs__nav-wrap::after {
-  background: var(--editorColor04);
 }
 
 div.el-tabs__item {
