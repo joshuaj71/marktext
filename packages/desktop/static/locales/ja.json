@@ -213,7 +213,8 @@
       "closeAllTabs": "すべてのタブを閉じる",
       "rename": "名前の変更",
       "copyPath": "パスのコピー",
-      "showInFolder": "フォルダーの表示"
+      "showInFolder": "フォルダーの表示",
+      "allTabs": "すべてのタブ"
     }
   },
   "search": {

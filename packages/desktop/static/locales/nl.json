@@ -213,7 +213,8 @@
       "closeAllTabs": "Alle tabbladen sluiten",
       "rename": "Hernoemen",
       "copyPath": "Pad kopiëren",
-      "showInFolder": "Tonen in map"
+      "showInFolder": "Tonen in map",
+      "allTabs": "Alle tabbladen"
     }
   },
   "search": {

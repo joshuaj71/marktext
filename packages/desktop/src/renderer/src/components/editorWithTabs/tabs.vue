@@ -11,6 +11,8 @@
     <div
       ref="tabContainer"
       class="scrollable-tabs"
+      :class="{ 'clipped-start': clippedStart, 'clipped-end': clippedEnd }"
+      @scroll.passive="measureOverflow"
     >
       <ul
         ref="tabDropContainer"
@@ -46,6 +48,18 @@
         <Plus />
       </el-icon>
     </div>
+    <div
+      v-if="clippedStart || clippedEnd"
+      class="all-tabs"
+      role="button"
+      :title="t('contextMenu.tabs.allTabs')"
+      :aria-label="t('contextMenu.tabs.allTabs')"
+      @click.stop="showAllTabs($event)"
+    >
+      <el-icon :size="14">
+        <ArrowDown />
+      </el-icon>
+    </div>
   </div>
 </template>
 
@@ -59,13 +73,16 @@ import { isMac } from '@/util'
 import { shouldShowInAppTitleBar } from '../titleBar/visibility'
 import autoScroll from 'dom-autoscroller'
 import dragula from 'dragula'
-import { Plus, Close } from '@element-plus/icons-vue'
+import { Plus, Close, ArrowDown } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 import { showContextMenu } from '../../contextMenu/tabs'
+import { popupContextMenu } from '../../contextMenu/popupMenu'
 import bus from '../../bus'
 import type { IFileState } from '@shared/types/files'
 
 const editorStore = useEditorStore()
 const layoutStore = useLayoutStore()
+const { t } = useI18n()
 
 const { currentFile, tabs } = storeToRefs(editorStore)
 const { showSideBar } = storeToRefs(layoutStore)
@@ -92,6 +109,41 @@ const tabContainer = ref<HTMLElement | null>(null)
 const tabDropContainer = ref<HTMLElement | null>(null)
 let autoScroller: AutoScroller | null = null
 let drake: dragula.Drake | null = null
+
+// Whether tabs are scrolled out of sight before or after the visible part of
+// the strip. Either one fades that edge and shows the "all tabs" button.
+const clippedStart = ref(false)
+const clippedEnd = ref(false)
+let resizeObserver: ResizeObserver | null = null
+
+const measureOverflow = () => {
+  const container = tabContainer.value
+  if (!container) return
+  // A pixel of slack: fractional widths round differently in the two values.
+  clippedStart.value = container.scrollLeft > 1
+  clippedEnd.value = container.scrollLeft + container.clientWidth < container.scrollWidth - 1
+}
+
+// Tabs with the same file name are told apart by their folder.
+const tabMenuLabel = (file: IFileState): string => {
+  const sameName = tabs.value.filter((tab) => tab.filename === file.filename).length > 1
+  const folder = sameName && file.pathname ? window.path.basename(window.path.dirname(file.pathname)) : ''
+  const name = folder ? `${file.filename} — ${folder}` : file.filename
+  return file.isSaved ? name : `${name} •`
+}
+
+const showAllTabs = (event: MouseEvent) => {
+  const button = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  popupContextMenu(
+    tabs.value.map((file) => ({
+      label: tabMenuLabel(file),
+      type: 'radio',
+      checked: file.id === currentFile.value?.id,
+      click: () => selectFile(file)
+    })),
+    { x: Math.round(button.left), y: Math.round(button.bottom) }
+  )
+}
 
 // Computed properties
 
@@ -208,6 +260,13 @@ watch(
   }
 )
 
+watch(
+  () => tabs.value.length,
+  () => {
+    nextTick(measureOverflow)
+  }
+)
+
 onMounted(() => {
   bus.on('TABS::close-this', closeTab)
   bus.on('TABS::close-others', closeOthers)
@@ -223,6 +282,13 @@ onMounted(() => {
 
   // Allow to scroll through the tabs by mouse wheel or touchpad.
   tabsEl.addEventListener('wheel', handleTabScroll)
+
+  // The strip narrows with the window and the sidebar; the list widens with
+  // longer names. Either can start or end the overflow.
+  resizeObserver = new ResizeObserver(measureOverflow)
+  resizeObserver.observe(tabsEl)
+  resizeObserver.observe(tabDropContainer.value)
+  measureOverflow()
 
   // Allow tab drag and drop to reorder tabs.
   drake = dragula([tabDropContainer.value], {
@@ -271,6 +337,7 @@ onBeforeUnmount(() => {
   if (tabsEl) {
     tabsEl.removeEventListener('wheel', handleTabScroll)
   }
+  resizeObserver?.disconnect()
 
   if (autoScroller) {
     // Force destroy
@@ -344,6 +411,21 @@ onBeforeUnmount(() => {
   flex: 0 1 auto;
   height: 100%;
   overflow: hidden;
+  --fadeStart: 0px;
+  --fadeEnd: 0px;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fadeStart),
+    #000 calc(100% - var(--fadeEnd)),
+    transparent
+  );
+}
+.scrollable-tabs.clipped-start {
+  --fadeStart: 28px;
+}
+.scrollable-tabs.clipped-end {
+  --fadeEnd: 28px;
 }
 .tabs-container {
   min-width: min-content;
@@ -478,9 +560,27 @@ onBeforeUnmount(() => {
     background 0.15s ease-in-out;
 }
 
-.editor-tabs > .new-file:hover {
+.editor-tabs > .new-file:hover,
+.editor-tabs > .all-tabs:hover {
   color: var(--editorColor);
   background: var(--chromeHoverBgColor);
+}
+.editor-tabs > .all-tabs {
+  -webkit-app-region: no-drag;
+  position: relative;
+  z-index: 2;
+  flex: 0 0 24px;
+  height: 28px;
+  margin-left: auto;
+  border-radius: var(--chromeRadius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--editorColor50);
+  transition:
+    color 0.15s ease-in-out,
+    background 0.15s ease-in-out;
 }
 
 /* dragula effects */

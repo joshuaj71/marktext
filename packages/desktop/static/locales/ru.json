@@ -213,7 +213,8 @@
       "closeAllTabs": "Закрыть все вкладки",
       "rename": "Переименовать",
       "copyPath": "Копировать путь",
-      "showInFolder": "Показать в папке"
+      "showInFolder": "Показать в папке",
+      "allTabs": "Все вкладки"
     }
   },
   "search": {

@@ -213,7 +213,8 @@
       "closeAllTabs": "Close all tabs",
       "rename": "Rename",
       "copyPath": "Copy path",
-      "showInFolder": "Show in folder"
+      "showInFolder": "Show in folder",
+      "allTabs": "All tabs"
     }
   },
   "search": {
