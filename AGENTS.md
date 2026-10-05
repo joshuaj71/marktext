@@ -296,3 +296,72 @@ See `packages/website/content/docs/dev/IPC.md` for conventions and examples.
 - Run `pnpm run lint` before submitting.
 - All PRs must pass CI before merge.
 - See `.github/CONTRIBUTING.md` for the full contributing guide.
+
+## Next Phase (Planned)
+
+This repository is a fork shipped as **Joshua MarkText** (`ui-refresh` branch,
+released as 1.1.0). The phase after 1.1.0 already delivered: switchable app
+and `.md` icons (Preferences › Theme › App Icon; artwork from
+`pnpm run generate-icons`), native window buttons on Windows, readable accent
+links and accent-aware theme previews, a tab overflow menu, sidebar header
+actions and hidden `.md` extensions, and the restyled command palette, find
+bar, dialogs and editor menus
+(`packages/desktop/src/renderer/src/assets/styles/surfaces.css`). The work
+below is what comes next.
+
+### Release and distribution
+
+- Bump the version to 1.2.0 in `package.json` and `packages/desktop/package.json`,
+  add the release to `RELEASE_NOTES.md`, tag it, and enable GitHub Actions so
+  `.github/workflows/release.yml` builds the installers.
+- Verify the icon switch in an installed build, with both a per-user and an
+  all-users install: the `.md` icon (an HKCU `DefaultIcon` override), the
+  shortcuts (a UAC prompt for all-users shortcuts), and the re-sync on startup
+  after an update or a reinstall (`packages/desktop/src/main/app/appIcon.ts`).
+- Sign the Windows installer, so SmartScreen stops warning (needs a certificate).
+- Replace the upstream logo in `README.md` and `docs/assets/` with the new icon.
+
+### Icons
+
+- All-users installs: a manual reinstall recreates the shortcuts in the default
+  colour, and the app asks for administrator rights only when a colour is
+  chosen, so they stay that way until then. Add a way to re-apply (a button in
+  Preferences, or the installer reading the preference).
+- More colour variants: add to `APP_ICON_VARIANTS` in
+  `packages/desktop/src/common/appIcon.ts` and to the `appIcon` enum in
+  `packages/desktop/src/main/preferences/schema.json`, then run
+  `pnpm run generate-icons`.
+
+### UI
+
+- The Preferences window still draws its own close button; give it the native
+  window controls on Windows, as the editor window has.
+- Linux still uses page-drawn window buttons; Electron's window controls overlay
+  works there as well.
+- The theme preview cards show a custom accent on every card, but in the editor
+  a theme whose links have a hue of their own keeps it (`accentFollowerValue`
+  in `packages/desktop/src/renderer/src/util/accentColor.ts`). Read each
+  theme's real link colour instead.
+- Sidebar: the new-item input's placeholder ("Enter .md file name", in
+  `packages/desktop/src/renderer/src/components/sideBar/tree.vue`) is
+  hard-coded English and is also shown when creating a folder. Translate it
+  and word it per item type.
+- The restyled editor menus and toolbars have no visual tests; the emoji picker
+  in particular could not be opened from Playwright.
+
+### Tests and tooling
+
+- These e2e specs fail on a Windows 10 machine with a Chinese system locale, and
+  already did at 1.1.0:
+  - `issue-2245-window-menu-bar.spec.ts`: the Preferences window's chrome
+    measures 38px instead of 37px after focus moves (DPI rounding?).
+  - `issue-3148-sidebar-delete-key.spec.ts`: Delete on the sidebar selection
+    opens no trash confirmation.
+  - `find-replace.spec.ts`, regex toggle: expects the English error text while
+    the app follows the system language; seed `language: 'en'` in the launch.
+  - `search-prefill-from-selection.spec.ts`: on Windows a double-click selects
+    the word plus its trailing space.
+- The repo pins pnpm 10.33.4 (`packageManager`). A newer pnpm (12.x was tried)
+  reinstalls `node_modules` without the `.npmrc` settings, `shamefully-hoist`
+  included, after which ESLint cannot resolve `@eslint/js`. Move those settings
+  into `pnpm-workspace.yaml` before upgrading pnpm; until then use pnpm 10.
