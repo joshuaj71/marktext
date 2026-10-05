@@ -25,6 +25,14 @@ export const APP_ID = 'com.github.joshuaj71.marktext'
  */
 export const APP_SLUG = 'joshua-marktext'
 
+/**
+ * The Windows ProgIds the installer registers for Markdown files: its own
+ * (`MT_PROGID` in installer.nsh) and the one electron-builder writes from
+ * `fileAssociations` (`MT_BUILDER_PROGID`). Explorer takes a file's icon from
+ * whichever one the user's choice of default app points at.
+ */
+export const WINDOWS_MARKDOWN_PROGIDS = ['JoshuaMarkText.Document', 'JoshuaMarkText.Markdown'] as const
+
 /** Where this build's source, releases and issue tracker live. */
 export const APP_REPO_URL = 'https://github.com/joshuaj71/marktext'
 

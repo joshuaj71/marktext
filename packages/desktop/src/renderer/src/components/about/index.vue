@@ -9,7 +9,7 @@
     >
       <img
         class="logo"
-        :src="MarkTextLogo"
+        :src="logo"
       >
       <el-row>
         <el-col :span="24">
@@ -49,10 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useMainStore } from '@/store'
+import { usePreferencesStore } from '@/store/preferences'
 import bus from '../../bus'
-import MarkTextLogo from '../../assets/images/logo.png'
+import { appIconUrl, resolveAppIcon } from '@/util/appIcon'
 import { useI18n } from 'vue-i18n'
 import { APP_PRODUCT_NAME, UPSTREAM_PRODUCT_NAME } from 'common/appIdentity'
 
@@ -65,6 +66,8 @@ const copyrightContributors = t('about.copyrightContributors')
 const showAboutDialog = ref(false)
 
 const store = useMainStore()
+const preferences = usePreferencesStore()
+const logo = computed(() => appIconUrl(resolveAppIcon(preferences.appIcon)))
 
 const showDialog = () => {
   showAboutDialog.value = true

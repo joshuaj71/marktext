@@ -8,7 +8,8 @@ import {
   APP_REPO_URL,
   APP_SLUG,
   UPSTREAM_PRODUCT_NAME,
-  UPSTREAM_REPO_URL
+  UPSTREAM_REPO_URL,
+  WINDOWS_MARKDOWN_PROGIDS
 } from 'common/appIdentity'
 
 // The app's identity is written down three times: in appIdentity.ts for the
@@ -93,6 +94,10 @@ describe('app identity', () => {
       [...yamlBlock('fileAssociations').matchAll(/^\s+name:\s*(\S+)\s*$/gm)].map((m) => m[1])
     )
     expect([...builderProgIds]).toEqual([nsisDefine('MT_BUILDER_PROGID')])
+    // The app repoints these at the icon colour picked in Preferences.
+    expect([nsisDefine('MT_PROGID'), nsisDefine('MT_BUILDER_PROGID')]).toEqual([
+      ...WINDOWS_MARKDOWN_PROGIDS
+    ])
     for (const progId of [nsisDefine('MT_PROGID'), nsisDefine('MT_BUILDER_PROGID')]) {
       expect(progId).toBeDefined()
       // Upstream's ProgIds; sharing one lets either uninstaller remove it.

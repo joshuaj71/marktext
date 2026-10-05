@@ -7,7 +7,7 @@ import { isChildOfDirectory, isSamePathSync } from 'common/filesystem/paths'
 import BaseWindow, { WindowLifecycle, WindowType } from './base'
 import type Accessor from '../app/accessor'
 import { ensureWindowPosition, zoomIn, zoomOut } from './utils'
-import { TITLE_BAR_HEIGHT, editorWinOptions, isLinux, isOsx } from '../config'
+import { TITLE_BAR_HEIGHT, editorWinOptions, isOsx } from '../config'
 import { APP_PRODUCT_NAME } from 'common/appIdentity'
 import { showEditorContextMenu } from '../contextMenu/editor'
 import { loadMarkdownFile } from '../filesystem/markdown'
@@ -105,8 +105,9 @@ class EditorWindow extends BaseWindow {
       editorWinOptions,
       options
     )
-    if (isLinux) {
-      winOptions.icon = path.join(process.cwd(), 'static', 'logo-96px.png')
+    const icon = this._accessor.appIcon.windowIconPath()
+    if (icon) {
+      winOptions.icon = icon
     }
 
     const {

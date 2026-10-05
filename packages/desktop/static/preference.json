@@ -67,6 +67,7 @@
   "lightModeTheme": "light",
   "darkModeTheme": "dark",
   "accentColor": "",
+  "appIcon": "google-blue",
   "customCss": "",
 
   "spellcheckerEnabled": false,

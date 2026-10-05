@@ -35,6 +35,7 @@
     "typecheck:watch": "pnpm --filter marktext typecheck:watch",
     "check": "pnpm lint && pnpm typecheck",
     "gen-third-party": "tsx scripts/generateThirdPartyLicense.ts",
+    "generate-icons": "tsx scripts/generate-icons.ts",
     "validate-licenses": "tsx scripts/validateLicenses.ts",
     "prepare": "husky"
   },
@@ -62,6 +63,7 @@
     "lint-staged": "^17.2.0",
     "neostandard": "^0.13.0",
     "prettier": "^3.8.4",
+    "sharp": "^0.34.5",
     "tsx": "^4.22.4",
     "typescript-eslint": "^8.61.1",
     "vue-eslint-parser": "^10.4.1"

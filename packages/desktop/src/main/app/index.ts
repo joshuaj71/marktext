@@ -114,6 +114,7 @@ class App {
     app.on('open-file', this.openFile) // macOS only
 
     app.on('ready', this.ready)
+    app.whenReady().then(() => this._accessor.appIcon.start())
 
     app.on('window-all-closed', () => {
       // Close all the image path watcher

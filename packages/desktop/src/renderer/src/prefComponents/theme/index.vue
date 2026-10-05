@@ -60,6 +60,52 @@
       </template>
     </compound>
 
+    <compound
+      :notes="
+        t(isWindows ? 'preferences.theme.appIconNotesWindows' : 'preferences.theme.appIconNotes')
+      "
+    >
+      <template #head>
+        <h6 class="title">
+          {{ t('preferences.theme.appIcon') }}
+        </h6>
+      </template>
+      <template #children>
+        <section
+          class="pref-app-icon"
+          role="radiogroup"
+          :aria-label="t('preferences.theme.appIcon')"
+        >
+          <button
+            v-for="variant of APP_ICON_VARIANTS"
+            :key="variant.id"
+            type="button"
+            role="radio"
+            class="app-icon-option"
+            :class="{ active: shownAppIcon === variant.id }"
+            :aria-checked="shownAppIcon === variant.id"
+            @click="onSelectChange('appIcon', variant.id)"
+          >
+            <span class="app-icon-images">
+              <img
+                :src="appIconUrl(variant.id)"
+                alt=""
+                width="48"
+                height="48"
+              >
+              <img
+                :src="markdownIconUrl(variant.id)"
+                alt=""
+                width="48"
+                height="48"
+              >
+            </span>
+            <span class="app-icon-name">{{ variant.name }}</span>
+          </button>
+        </section>
+      </template>
+    </compound>
+
     <section class="offcial-themes">
       <div
         v-for="themeItem of themes"
@@ -168,6 +214,9 @@ import {
   isAccentColor,
   type Hsl
 } from '@/util/accentColor'
+import { APP_ICON_VARIANTS } from 'common/appIcon'
+import { appIconUrl, markdownIconUrl, resolveAppIcon } from '@/util/appIcon'
+import { isWindows } from '@/util'
 
 interface ThemePreview {
   name: string
@@ -179,8 +228,17 @@ const themes = ref<ThemePreview[]>([])
 const { t } = useI18n()
 const preferenceStore = usePreferencesStore()
 
-const { followSystemTheme, lightModeTheme, darkModeTheme, theme, accentColor, customCss } =
-  storeToRefs(preferenceStore)
+const {
+  followSystemTheme,
+  lightModeTheme,
+  darkModeTheme,
+  theme,
+  accentColor,
+  appIcon,
+  customCss
+} = storeToRefs(preferenceStore)
+
+const shownAppIcon = computed(() => resolveAppIcon(appIcon.value))
 
 // How often, in ms, a colour still being dragged is written to the preferences
 // so the editor windows follow along. Each write also hits the settings file.
@@ -370,6 +428,46 @@ const onSelectChange = (type: keyof PreferencesState, value: unknown): void => {
   & .el-color-picker__trigger {
     border-color: var(--chromeBorderColor);
     border-radius: var(--chromeRadius);
+  }
+}
+
+.pref-app-icon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  & .app-icon-option {
+    appearance: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px 10px;
+    border: 1px solid var(--chromeBorderColor);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--editorColor);
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+  }
+  & .app-icon-option:hover {
+    background: var(--editorColor04);
+  }
+  & .app-icon-option:focus-visible {
+    outline: 2px solid var(--editorColor30);
+    outline-offset: 2px;
+  }
+  /* Inset ring, so the border keeps its width when selected. */
+  & .app-icon-option.active {
+    border-color: var(--themeColor);
+    box-shadow: inset 0 0 0 1px var(--themeColor);
+  }
+  & .app-icon-images {
+    display: flex;
+    gap: 10px;
+  }
+  & .app-icon-name {
+    font-size: 13px;
   }
 }
 

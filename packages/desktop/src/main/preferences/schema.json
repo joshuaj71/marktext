@@ -343,6 +343,12 @@
     "pattern": "^(#[0-9a-fA-F]{6})?$",
     "default": ""
   },
+  "appIcon": {
+    "description": "Theme--Color of the application icon and of Markdown file icons.",
+    "type": "string",
+    "enum": ["google-blue", "nokia-light-blue"],
+    "default": "google-blue"
+  },
   "customCss": {
     "description": "Custom CSS--Custom CSS to apply to the current theme.--internal",
     "type": "string",

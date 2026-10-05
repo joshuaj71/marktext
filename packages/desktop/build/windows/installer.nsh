@@ -86,6 +86,13 @@
     !insertmacro mtUnassociateExtension ".mdtext"
     !insertmacro mtUnassociateExtension ".mdx"
     DeleteRegKey SHELL_CONTEXT "Software\Classes\${MT_PROGID}"
+    ; The app writes the user's choice of icon colour to HKCU even when the
+    ; ProgIds live in HKLM (src/main/app/appIcon.ts), so an install for all
+    ; users leaves these behind otherwise.
+    DeleteRegKey HKCU "Software\Classes\${MT_PROGID}\DefaultIcon"
+    DeleteRegKey /ifempty HKCU "Software\Classes\${MT_PROGID}"
+    DeleteRegKey HKCU "Software\Classes\${MT_BUILDER_PROGID}\DefaultIcon"
+    DeleteRegKey /ifempty HKCU "Software\Classes\${MT_BUILDER_PROGID}"
   ${endIf}
 
   MessageBox MB_YESNO "Do you want to delete user settings?" /SD IDNO IDNO SkipRemoval

@@ -6,6 +6,7 @@ import Keybindings from '../keyboard/shortcutHandler'
 import AppMenu from '../menu'
 import { loadMenuCommands } from '../menu/actions'
 import { CommandManager, loadDefaultCommands } from '../commands'
+import AppIcon from './appIcon'
 import type { AppEnvironment } from './env'
 import type AppPaths from './paths'
 
@@ -13,6 +14,7 @@ class Accessor {
   public env: AppEnvironment
   public paths: AppPaths
   public preferences: Preference
+  public appIcon: AppIcon
   public dataCenter: DataCenter
   public editorBufferStore: EditorBufferStore
   public commandManager: CommandManager
@@ -30,6 +32,7 @@ class Accessor {
     this.paths = appEnvironment.paths // export paths to make it better accessible
 
     this.preferences = new Preference(this.paths)
+    this.appIcon = new AppIcon(this.preferences)
     this.dataCenter = new DataCenter(this.paths)
     this.editorBufferStore = new EditorBufferStore(this.paths)
 

@@ -1,11 +1,10 @@
-import path from 'path'
 import { BrowserWindow, ipcMain } from 'electron'
 import type { BrowserWindowConstructorOptions } from 'electron'
 import { electronLocalshortcut } from '@hfelix/electron-localshortcut'
 import BaseWindow, { WindowLifecycle, WindowType, type EnvLike, type PreferenceLike } from './base'
 import type Accessor from '../app/accessor'
 import { centerWindowOptions } from './utils'
-import { TITLE_BAR_HEIGHT, preferencesWinOptions, isLinux, isOsx } from '../config'
+import { TITLE_BAR_HEIGHT, preferencesWinOptions, isOsx } from '../config'
 import log from 'electron-log'
 
 class SettingWindow extends BaseWindow {
@@ -33,11 +32,9 @@ class SettingWindow extends BaseWindow {
         y?: number
       }
     )
-    if (isLinux) {
-      winOptions.icon = path.join(
-        (global as unknown as { __static: string }).__static,
-        'logo-96px.png'
-      )
+    const icon = this._accessor.appIcon.windowIconPath()
+    if (icon) {
+      winOptions.icon = icon
     }
 
     // WORKAROUND: Electron has issues with different DPI per monitor when
