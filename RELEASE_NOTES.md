@@ -4,6 +4,95 @@ Release notes for this fork of [MarkText](https://github.com/marktext/marktext),
 maintained at <https://github.com/joshuaj71/marktext>. For the history of
 MarkText itself, see the upstream project's releases.
 
+## v1.1.0 — 2026-10-05
+
+The fork becomes an application of its own, **Joshua MarkText**, and gains what
+it needs to be installed and updated independently of the official MarkText.
+There are no changes to the editor or the interface in this release.
+
+### A separate application
+
+- **Name:** Joshua MarkText, in the About dialog, the installer, the Start
+  menu or application launcher, and the title bar when no file is open.
+- **Application ID:** `com.github.joshuaj71.marktext` (was upstream's
+  `com.github.marktext.marktext`). The running app registers the same ID with
+  Windows, so its window and its shortcut are one taskbar item.
+- **Executable and packages:** `joshua-marktext` (was `marktext`), so the
+  installer no longer mistakes a running official MarkText for a running copy
+  of itself.
+- **Settings folder:** `joshua-marktext` inside the system's application-data
+  folder — `%APPDATA%\joshua-marktext` on Windows, `~/.config/joshua-marktext`
+  on Linux, `~/Library/Application Support/joshua-marktext` on macOS.
+  Development runs use `joshua-marktext-dev`.
+- **Stored credentials** (for example image-uploader tokens) are kept under the
+  app's own name in the system keychain.
+- **File types on Windows** are registered under the app's own identifiers
+  (`JoshuaMarkText.Document`, `JoshuaMarkText.Markdown`), so installing or
+  removing this app leaves the official MarkText's registration alone, and the
+  other way round.
+- **Uninstalling on Windows** offers to delete only this app's settings folder.
+  Before this release the uninstaller named the official MarkText's folder.
+- **About dialog:** shows the new name and credits upstream with "Based on
+  MarkText". The upstream copyright lines are unchanged.
+
+### Updates and links
+
+- An installed copy checks **this repository's releases** for updates, through
+  Help → Check for Updates. That entry appears in the Windows installer build
+  and the Linux AppImage, as before.
+- Help → Changelog, Report Bug, View Source and License open this repository.
+  Markdown Reference, Ask Question, Follow Us and Support MarkText still open
+  the upstream project's pages.
+- Report Bug opens this repository's issue tracker, which GitHub switches off
+  for forks by default. Enable it under the repository's Settings → Features →
+  Issues for the link to lead somewhere.
+
+### Installers
+
+- Installers and archives are named `joshua-marktext-<platform>-<arch>-<version>`.
+- Building locally is unchanged: `pnpm run build:win` (or `build:mac`,
+  `build:linux`) writes the installers to `dist/`.
+- Publishing is unchanged: pushing a `v*` tag runs the release workflow, which
+  builds for Windows, macOS and Linux and publishes a GitHub release with the
+  installers and the files the update check reads. GitHub Actions has to be
+  enabled on the fork for that to happen.
+
+### Moving from v1.0.0 or the official MarkText
+
+This release starts with default settings. It does not read, change or remove
+the official MarkText's settings, and settings made while running v1.0.0 of
+this fork stay where that version kept them, in the official MarkText's folder
+(`marktext`, or `marktext-dev` for development runs).
+
+To carry settings over by hand, close the app and copy `preferences.json` and
+`keybindings.json` from the old folder into the new one.
+
+### Verification
+
+- A packaged Linux build was started with an empty profile: it runs without
+  errors, reports itself as `joshua-marktext`, creates `~/.config/joshua-marktext`
+  and no other folder, and its bundled update configuration points at this
+  repository.
+- New unit tests compare the identity used by the running app with the one in
+  the packaging configuration and the Windows installer script, so the three
+  cannot drift apart unnoticed.
+- Automated tests, run on Linux: type checks pass, and 1,040 of 1,043 unit
+  tests pass, with the same three environment-specific failures as in v1.0.0.
+  In the full end-to-end run 330 tests passed and 4 were skipped; one test's
+  app instance did not start because the test display server refused the
+  connection, and that test passed when run again.
+
+### Known limitations
+
+- The Windows installer has not been built or run for this release. Its file
+  type registration, side-by-side installation with the official MarkText and
+  the update check are configured but untested.
+- macOS is untested, as in v1.0.0.
+- The application icon is still upstream's, so the two apps look alike in the
+  Start menu apart from their names.
+- Menus and a few messages still say "MarkText" where they name the app, for
+  example "About MarkText".
+
 ## v1.0.0 — 2026-10-05
 
 The first release of the fork: a redesigned interface, an adjustable accent
