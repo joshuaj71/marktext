@@ -243,6 +243,7 @@
       "openedFiles": "열린 파일",
       "saveAll": "모두 저장",
       "closeAll": "모두 닫기",
+      "collapseAll": "모든 폴더 접기",
       "emptyProject": "빈 프로젝트",
       "createFile": "파일 만들기",
       "openFolder": "폴더 열기"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "상대 이미지가 복사되는 위치",
         "imageRelativeDirectoryName": "상대 이미지 폴더 이름",
         "fileSortOrder": "열린 폴더의 파일 정렬 순서: 오름차순 또는 내림차순",
-        "openedFilesInSidebar": "사이드바에 열린 파일을 표시할지 여부"
+        "openedFilesInSidebar": "탭 표시줄이 숨겨져 있을 때 사이드바에 열린 파일을 표시할지 여부.",
+        "hideMarkdownExtension": "사이드바에서 Markdown 파일의 .md 확장자를 숨길지 여부."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "사이드바",
         "wrapTextInToc": "목차에서 텍스트 줄바꿈",
-        "showOpenedFiles": "열린 파일 표시",
+        "showOpenedFiles": "탭 표시줄이 숨겨져 있을 때 열린 파일 표시",
+        "hideMarkdownExtension": "Markdown 파일의 확장자 숨기기",
         "excludePatterns": "제외 패턴",
         "excludePatternsNotes": "제외 패턴 (참고)",
         "fileSortBy": {

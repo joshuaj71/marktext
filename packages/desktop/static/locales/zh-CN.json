@@ -243,6 +243,7 @@
       "openedFiles": "已打开的文件",
       "saveAll": "保存全部",
       "closeAll": "关闭全部",
+      "collapseAll": "折叠所有文件夹",
       "emptyProject": "空项目",
       "createFile": "创建文件",
       "openFolder": "打开文件夹"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "相对图片的复制位置",
         "imageRelativeDirectoryName": "相对图片文件夹名称",
         "fileSortOrder": "打开文件夹中文件的排序顺序：升序或降序",
-        "openedFilesInSidebar": "是否在侧边栏中显示已打开文件"
+        "openedFilesInSidebar": "隐藏标签栏时是否在侧边栏中显示已打开的文件。",
+        "hideMarkdownExtension": "是否在侧边栏中隐藏 Markdown 文件的 .md 扩展名。"
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "侧边栏",
         "wrapTextInToc": "在目录中换行文本",
-        "showOpenedFiles": "显示已打开文件",
+        "showOpenedFiles": "隐藏标签栏时显示已打开的文件",
+        "hideMarkdownExtension": "隐藏 Markdown 文件的扩展名",
         "excludePatterns": "排除模式",
         "excludePatternsNotes": "排除模式（注释）",
         "fileSortBy": {

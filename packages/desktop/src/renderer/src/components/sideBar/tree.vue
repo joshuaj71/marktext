@@ -4,9 +4,9 @@
       <!-- Placeholder -->
     </div>
 
-    <!-- Opened tabs -->
+    <!-- Opened tabs; the tab bar lists them already when it is shown. -->
     <div
-      v-if="openedFilesInSidebar"
+      v-if="openedFilesInSidebar && !showTabBar"
       class="opened-files"
     >
       <div class="title">
@@ -86,6 +86,58 @@
         >{{
           projectTree.name
         }}</span>
+        <button
+          type="button"
+          class="title-action"
+          :title="t('contextMenu.sideBar.newFile')"
+          :aria-label="t('contextMenu.sideBar.newFile')"
+          @click.stop="createInRoot('file')"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path d="M9 1.5H4.5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5L9 1.5Z" />
+            <path d="M9 1.5V5h3.5M8 7.5v5M5.5 10h5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="title-action"
+          :title="t('contextMenu.sideBar.newDirectory')"
+          :aria-label="t('contextMenu.sideBar.newDirectory')"
+          @click.stop="createInRoot('directory')"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path d="M1.5 4a1 1 0 0 1 1-1h3.6l1.5 1.5h5.9a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4Z" />
+            <path d="M8 7v4.5M5.75 9.25h4.5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="title-action"
+          :title="t('sideBar.tree.collapseAll')"
+          :aria-label="t('sideBar.tree.collapseAll')"
+          @click.stop="collapseAll()"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path d="M4.5 1.5h9a1 1 0 0 1 1 1v9" />
+            <rect
+              x="1.5"
+              y="4.5"
+              width="10"
+              height="10"
+              rx="1"
+            />
+            <path d="M4 9.5h5" />
+          </svg>
+        </button>
       </div>
       <div
         v-show="showDirectories"
@@ -157,6 +209,7 @@ import { storeToRefs } from 'pinia'
 import { useProjectStore } from '@/store/project'
 import { useEditorStore } from '@/store/editor'
 import { usePreferencesStore } from '@/store/preferences'
+import { useLayoutStore } from '@/store/layout'
 import Folder from './treeFolder.vue'
 import File from './treeFile.vue'
 import OpenedFile from './treeOpenedTab.vue'
@@ -211,6 +264,7 @@ const { clipboard } = storeToRefs(projectStore)
 const { activeItem } = storeToRefs(projectStore)
 const { renameCache } = storeToRefs(projectStore)
 const { openedFilesInSidebar } = storeToRefs(preferencesStore)
+const { showTabBar } = storeToRefs(useLayoutStore())
 
 // The createCache state is `{ dirname, type }` while an input is shown, and
 // `{}` otherwise. Expose a typed accessor for the template so we don't have
@@ -230,8 +284,17 @@ const saveAll = (isClose: boolean): void => {
 }
 
 const createFile = (): void => {
+  createInRoot('file')
+}
+
+const createInRoot = (type: 'file' | 'directory'): void => {
   projectStore.CHANGE_ACTIVE_ITEM(props.projectTree)
-  bus.emit('SIDEBAR::new', 'file')
+  if (!showDirectories.value) toggleDirectories()
+  bus.emit('SIDEBAR::new', type)
+}
+
+const collapseAll = (): void => {
+  bus.emit('SIDEBAR::collapse-all')
 }
 
 const handleRootContextMenu = (event: MouseEvent): void => {
@@ -442,20 +505,43 @@ onUnmounted(() => {
   user-select: none;
 }
 
-.project-tree > .title > a {
-  pointer-events: auto;
-  cursor: pointer;
-  margin-left: 8px;
+.project-tree > .title > .title-action {
+  appearance: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
   color: var(--sideBarIconColor);
+  cursor: pointer;
+  /* Shown on hovering the header, or once one of them has keyboard focus. */
   opacity: 0;
-}
-
-.project-tree > .title > a:hover {
-  color: var(--sideBarTitleColor);
-}
-
-.project-tree > .title > a.active {
-  color: var(--highlightThemeColor);
+  transition:
+    opacity 0.15s ease-in-out,
+    background 0.15s ease-in-out;
+  & svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  &:hover {
+    color: var(--sideBarTitleColor);
+    background: var(--chromeHoverBgColor);
+  }
+  &:focus-visible {
+    opacity: 1;
+    outline: 1px solid var(--themeColor);
+  }
 }
 
 .project-tree > .tree-wrapper {
@@ -467,7 +553,7 @@ onUnmounted(() => {
 .project-tree > .tree-wrapper::-webkit-scrollbar:vertical {
   width: 8px;
 }
-.project-tree div.title:hover > a {
+.project-tree div.title:hover > .title-action {
   opacity: 1;
 }
 .open-project {

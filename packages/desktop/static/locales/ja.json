@@ -243,6 +243,7 @@
       "openedFiles": "開いているファイル",
       "saveAll": "すべて保存",
       "closeAll": "すべて閉じる",
+      "collapseAll": "すべてのフォルダーを折りたたむ",
       "emptyProject": "空のプロジェクト",
       "createFile": "ファイルの作成",
       "openFolder": "フォルダーを開く"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "相対画像のコピー先",
         "imageRelativeDirectoryName": "相対画像フォルダー名",
         "fileSortOrder": "開いたフォルダー内のファイルの並べ替え順、昇順または降順",
-        "openedFilesInSidebar": "開いているファイルをサイドバーに表示するかどうか"
+        "openedFilesInSidebar": "タブバーが非表示のときにサイドバーに開いているファイルを表示するかどうか。",
+        "hideMarkdownExtension": "サイドバーで Markdown ファイルの .md 拡張子を隠すかどうか。"
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "サイドバー",
         "wrapTextInToc": "目次でテキストを折り返し",
-        "showOpenedFiles": "開いているファイルを表示",
+        "showOpenedFiles": "タブバーが非表示のときに開いているファイルを表示",
+        "hideMarkdownExtension": "Markdown ファイルの拡張子を隠す",
         "excludePatterns": "除外パターン",
         "excludePatternsNotes": "除外パターンの注意事項",
         "fileSortBy": {

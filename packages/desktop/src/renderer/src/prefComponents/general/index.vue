@@ -81,6 +81,11 @@
           :bool="openedFilesInSidebar"
           :on-change="(value) => onSelectChange('openedFilesInSidebar', value)"
         />
+        <bool
+          :description="t('preferences.general.sidebar.hideMarkdownExtension')"
+          :bool="hideMarkdownExtension"
+          :on-change="(value) => onSelectChange('hideMarkdownExtension', value)"
+        />
 
         <text-box
           :description="t('preferences.general.sidebar.excludePatterns')"
@@ -220,7 +225,8 @@ const {
   fileSortBy,
   fileSortOrder,
   language,
-  openedFilesInSidebar
+  openedFilesInSidebar,
+  hideMarkdownExtension
 } = storeToRefs(preferenceStore)
 
 const startUpAction = computed<string>({

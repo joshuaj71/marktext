@@ -243,6 +243,7 @@
       "openedFiles": "Opened files",
       "saveAll": "Save All",
       "closeAll": "Close All",
+      "collapseAll": "Collapse All Folders",
       "emptyProject": "Empty project",
       "createFile": "Create File",
       "openFolder": "Open Folder"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryName": "The relative image folder name",
         "autoNormalizeLineEndings": "Automatically normalize line endings when opening files. When disabled, files are opened as-is.",
         "fileSortOrder": "Sort order for files in opened folders: ascending or descending.",
-        "openedFilesInSidebar": "Whether to show opened files in the sidebar."
+        "openedFilesInSidebar": "Whether to show opened files in the sidebar when the tab bar is hidden.",
+        "hideMarkdownExtension": "Whether to hide the .md extension of Markdown files in the sidebar."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "Sidebar",
         "wrapTextInToc": "Wrap text in table of contents",
-        "showOpenedFiles": "Show opened files",
+        "showOpenedFiles": "Show opened files when the tab bar is hidden",
+        "hideMarkdownExtension": "Hide the extension of Markdown files",
         "excludePatterns": "Exclude patterns",
         "excludePatternsNotes": "Exclude patterns (Notes)",
         "fileSortBy": {

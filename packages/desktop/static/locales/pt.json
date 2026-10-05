@@ -243,6 +243,7 @@
       "openedFiles": "Arquivos abertos",
       "saveAll": "Salvar Todos",
       "closeAll": "Fechar Todos",
+      "collapseAll": "Recolher todas as pastas",
       "emptyProject": "Projeto vazio",
       "createFile": "Criar Arquivo",
       "openFolder": "Abrir Pasta"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "Onde as imagens relativas são copiadas",
         "imageRelativeDirectoryName": "O nome da pasta de imagem relativa",
         "fileSortOrder": "Ordem de classificação dos arquivos nas pastas abertas: ascendente ou descendente.",
-        "openedFilesInSidebar": "Se os arquivos abertos são mostrados na barra lateral."
+        "openedFilesInSidebar": "Se os arquivos abertos são mostrados na barra lateral quando a barra de abas está oculta.",
+        "hideMarkdownExtension": "Se a extensão .md dos arquivos Markdown é ocultada na barra lateral."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "Barra Lateral",
         "wrapTextInToc": "Quebrar texto no índice",
-        "showOpenedFiles": "Mostrar arquivos abertos",
+        "showOpenedFiles": "Mostrar arquivos abertos quando a barra de abas estiver oculta",
+        "hideMarkdownExtension": "Ocultar a extensão dos arquivos Markdown",
         "excludePatterns": "Padrões de exclusão",
         "excludePatternsNotes": "Padrões de exclusão (Notas)",
         "fileSortBy": {

@@ -243,6 +243,7 @@
       "openedFiles": "已開啟的檔案",
       "saveAll": "全部儲存",
       "closeAll": "全部關閉",
+      "collapseAll": "摺疊所有資料夾",
       "emptyProject": "空專案",
       "createFile": "建立檔案",
       "openFolder": "開啟資料夾"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "相對圖片的複製位置",
         "imageRelativeDirectoryName": "相對圖片資料夾名稱",
         "fileSortOrder": "開啟資料夾中檔案的排序順序：遞增或遞減",
-        "openedFilesInSidebar": "是否在側邊欄中顯示已開啟的檔案"
+        "openedFilesInSidebar": "隱藏分頁列時是否在側邊欄中顯示已開啟的檔案。",
+        "hideMarkdownExtension": "是否在側邊欄中隱藏 Markdown 檔案的 .md 副檔名。"
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "側邊欄",
         "wrapTextInToc": "在目錄中換行文字",
-        "showOpenedFiles": "顯示已開啟的檔案",
+        "showOpenedFiles": "隱藏分頁列時顯示已開啟的檔案",
+        "hideMarkdownExtension": "隱藏 Markdown 檔案的副檔名",
         "excludePatterns": "排除模式",
         "excludePatternsNotes": "排除模式（備註）",
         "fileSortBy": {

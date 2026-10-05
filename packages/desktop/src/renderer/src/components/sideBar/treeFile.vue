@@ -19,7 +19,7 @@
       @click.stop="noop"
       @keypress.enter="rename"
     >
-    <span v-else>{{ file.name }}</span>
+    <span v-else>{{ sideBarFileName(file.name, hideMarkdownExtension) }}</span>
   </div>
 </template>
 
@@ -28,7 +28,9 @@ import { ref, onMounted, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useProjectStore } from '@/store/project'
 import { useEditorStore } from '@/store/editor'
+import { usePreferencesStore } from '@/store/preferences'
 import FileIcon from './icon.vue'
+import { sideBarFileName } from './displayName'
 import { showContextMenu } from '../../contextMenu/sideBar'
 import bus from '../../bus'
 import type { TreeFileNode } from './types'
@@ -49,6 +51,7 @@ const { renameCache } = storeToRefs(projectStore)
 const { activeItem } = storeToRefs(projectStore)
 const { clipboard } = storeToRefs(projectStore)
 const { currentFile, tabs } = storeToRefs(editorStore)
+const { hideMarkdownExtension } = storeToRefs(usePreferencesStore())
 
 // from fileMixins
 const handleFileClick = (): void => {

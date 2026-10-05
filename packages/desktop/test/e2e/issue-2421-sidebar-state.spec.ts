@@ -74,13 +74,15 @@ test.describe('#2421 sidebar state survives icon toggle', () => {
   })
 
   test('a collapsed tree section stays collapsed after toggling the sidebar', async() => {
-    const arrow = page.locator('.side-bar .opened-files > .title .icon-arrow').first()
+    // The folder section: "Opened files" is hidden while the tab bar shows,
+    // and opening the file's folder turns the tab bar on. Both sections keep
+    // their state the same way.
+    const arrow = page.locator('.side-bar .project-tree > .title .icon-arrow').first()
     await expect(arrow).toBeVisible()
 
-    // Collapse the "Opened files" section.
     await arrow.click()
     await page.waitForFunction(() => {
-      const a = document.querySelector('.side-bar .opened-files .icon-arrow')
+      const a = document.querySelector('.side-bar .project-tree > .title .icon-arrow')
       return !!(a && a.classList.contains('fold'))
     }, null, { timeout: 5000 })
 
@@ -89,12 +91,12 @@ test.describe('#2421 sidebar state survives icon toggle', () => {
     await page.waitForTimeout(250)
     await filesIcon(page).click()
     await page.waitForFunction(() => {
-      const el = document.querySelector('.side-bar .opened-files') as HTMLElement | null
+      const el = document.querySelector('.side-bar .project-tree') as HTMLElement | null
       return !!(el && el.offsetParent !== null)
     }, null, { timeout: 5000 })
 
     const stillCollapsed = await page.evaluate(() => {
-      const a = document.querySelector('.side-bar .opened-files .icon-arrow')
+      const a = document.querySelector('.side-bar .project-tree > .title .icon-arrow')
       return !!(a && a.classList.contains('fold'))
     })
     expect(stillCollapsed).toBe(true)

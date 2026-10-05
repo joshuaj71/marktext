@@ -243,6 +243,7 @@
       "openedFiles": "Geopende bestanden",
       "saveAll": "Alles opslaan",
       "closeAll": "Alles sluiten",
+      "collapseAll": "Alle mappen samenvouwen",
       "emptyProject": "Leeg project",
       "createFile": "Bestand aanmaken",
       "openFolder": "Map openen"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryName": "Naam van de relatieve afbeeldingsmap",
         "autoNormalizeLineEndings": "Regeleindes automatisch normaliseren bij het openen van bestanden. Indien uitgeschakeld worden bestanden ongewijzigd geopend.",
         "fileSortOrder": "Sorteervolgorde voor bestanden in geopende mappen: oplopend of aflopend.",
-        "openedFilesInSidebar": "Geopende bestanden tonen in de zijbalk."
+        "openedFilesInSidebar": "Of geopende bestanden in de zijbalk worden getoond als de tabbladbalk verborgen is.",
+        "hideMarkdownExtension": "Of de extensie .md van Markdown-bestanden in de zijbalk wordt verborgen."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "Zijbalk",
         "wrapTextInToc": "Tekstterugloop in inhoudsopgave",
-        "showOpenedFiles": "Geopende bestanden tonen",
+        "showOpenedFiles": "Geopende bestanden tonen als de tabbladbalk verborgen is",
+        "hideMarkdownExtension": "Extensie van Markdown-bestanden verbergen",
         "excludePatterns": "Uitsluitpatronen",
         "excludePatternsNotes": "Uitsluitpatronen (opmerkingen)",
         "fileSortBy": {

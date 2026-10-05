@@ -12,14 +12,16 @@
     >
       <Close />
     </el-icon>
-    <span class="name">{{ file.filename }}</span>
+    <span class="name">{{ sideBarFileName(file.filename, hideMarkdownExtension) }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useEditorStore } from '@/store/editor'
+import { usePreferencesStore } from '@/store/preferences'
 import { Close } from '@element-plus/icons-vue'
+import { sideBarFileName } from './displayName'
 import type { TabDescriptor } from './types'
 
 defineProps<{
@@ -29,6 +31,7 @@ defineProps<{
 const editorStore = useEditorStore()
 
 const { currentFile } = storeToRefs(editorStore)
+const { hideMarkdownExtension } = storeToRefs(usePreferencesStore())
 
 const selectFile = (file: TabDescriptor): void => {
   if (file.id !== currentFile.value?.id) {

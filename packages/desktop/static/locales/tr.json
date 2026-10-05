@@ -243,6 +243,7 @@
       "openedFiles": "Açık dosyalar",
       "saveAll": "Tümünü Kaydet",
       "closeAll": "Tümünü Kapat",
+      "collapseAll": "Tüm klasörleri daralt",
       "emptyProject": "Boş proje",
       "createFile": "Dosya Oluştur",
       "openFolder": "Klasör Aç"
@@ -437,7 +438,8 @@
         "plantumlServer": "PlantUML sunucu URL'si",
         "autoNormalizeLineEndings": "Dosyaları açarken yeni satır karakterlerini otomatik olarak normalleştir. Devre dışı bırakıldığında dosyalar olduğu gibi açılır.",
         "fileSortOrder": "Açık klasörlerdeki dosyaların sıralama düzeni: artan veya azalan.",
-        "openedFilesInSidebar": "Açık dosyaların kenar çubuğunda gösterilip gösterilmeyeceği."
+        "openedFilesInSidebar": "Sekme çubuğu gizliyken açık dosyaların kenar çubuğunda gösterilip gösterilmeyeceği.",
+        "hideMarkdownExtension": "Kenar çubuğunda Markdown dosyalarının .md uzantısının gizlenip gizlenmeyeceği."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "Kenar Çubuğu",
         "wrapTextInToc": "İçindekilerde metni kaydır",
-        "showOpenedFiles": "Açık dosyaları göster",
+        "showOpenedFiles": "Sekme çubuğu gizliyken açık dosyaları göster",
+        "hideMarkdownExtension": "Markdown dosyalarının uzantısını gizle",
         "excludePatterns": "Hariç tutma desenleri",
         "excludePatternsNotes": "Hariç tutma desenleri (Notlar)",
         "fileSortBy": {

@@ -406,9 +406,14 @@
     "default": false
   },
   "openedFilesInSidebar": {
-    "description": "General--Whether to show opened files in the sidebar.",
+    "description": "General--Whether to show opened files in the sidebar when the tab bar is hidden.",
     "type": "boolean",
     "default": true
+  },
+  "hideMarkdownExtension": {
+    "description": "General--Whether to hide the .md extension of Markdown files in the sidebar.",
+    "type": "boolean",
+    "default": false
   },
   "searchExclusions": {
     "description": "Searcher--List of glob patterns to exclude from search.--internal",

@@ -243,6 +243,7 @@
       "openedFiles": "Geöffnete Dateien",
       "saveAll": "Alle speichern",
       "closeAll": "Alle schließen",
+      "collapseAll": "Alle Ordner einklappen",
       "emptyProject": "Leeres Projekt",
       "createFile": "Datei erstellen",
       "openFolder": "Ordner öffnen"
@@ -437,7 +438,8 @@
         "imageRelativeDirectoryBase": "Wohin relative Bilder kopiert werden",
         "imageRelativeDirectoryName": "Der relative Bildordner-Name",
         "fileSortOrder": "Sortierreihenfolge für Dateien in geöffneten Ordnern: aufsteigend oder absteigend.",
-        "openedFilesInSidebar": "Ob geöffnete Dateien in der Seitenleiste angezeigt werden sollen."
+        "openedFilesInSidebar": "Ob geöffnete Dateien in der Seitenleiste angezeigt werden, wenn die Tableiste ausgeblendet ist.",
+        "hideMarkdownExtension": "Ob die Endung .md von Markdown-Dateien in der Seitenleiste ausgeblendet wird."
       }
     },
     "categories": {
@@ -484,7 +486,8 @@
       "sidebar": {
         "title": "Seitenleiste",
         "wrapTextInToc": "Text im Inhaltsverzeichnis umbrechen",
-        "showOpenedFiles": "Geöffnete Dateien anzeigen",
+        "showOpenedFiles": "Geöffnete Dateien anzeigen, wenn die Tableiste ausgeblendet ist",
+        "hideMarkdownExtension": "Endung von Markdown-Dateien ausblenden",
         "excludePatterns": "Ausschlussmuster",
         "excludePatternsNotes": "Hinweise zu Ausschlussmustern",
         "fileSortBy": {

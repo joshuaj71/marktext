@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useProjectStore } from '@/store/project'
 import { showContextMenu } from '../../contextMenu/sideBar'
@@ -111,6 +111,10 @@ const handleInputEnter = (): void => {
   projectStore.CREATE_FILE_DIRECTORY(createName.value)
 }
 
+const collapse = (): void => {
+  isCollapsed.value = true
+}
+
 const folderNameClick = (): void => {
   projectStore.CHANGE_ACTIVE_ITEM(props.folder)
   isCollapsed.value = !isCollapsed.value
@@ -143,6 +147,14 @@ onMounted(() => {
   }
   bus.on('SIDEBAR::show-new-input', handleInputFocus)
   bus.on('SIDEBAR::show-rename-input', focusRenameInput)
+  bus.on('SIDEBAR::collapse-all', collapse)
+})
+
+// A folder unmounts whenever its parent collapses; its handlers must go with it.
+onUnmounted(() => {
+  bus.off('SIDEBAR::show-new-input', handleInputFocus)
+  bus.off('SIDEBAR::show-rename-input', focusRenameInput)
+  bus.off('SIDEBAR::collapse-all', collapse)
 })
 </script>
 
