@@ -34,6 +34,14 @@ import type {
 import type { BufferedState as BufferedStateType } from './bufferedState'
 import type { MenuTemplate, MenuPopupPosition } from './menu'
 
+/** `#rrggbb` colours for the native window controls on Windows. */
+export interface TitleBarOverlayColors {
+  /** Behind the buttons. */
+  color: string
+  /** The buttons' glyphs. */
+  symbolColor: string
+}
+
 export interface SaveDialogRequest {
   title?: string
   defaultPath?: string
@@ -196,6 +204,7 @@ export interface IpcSendChannels {
   'mt::win::maximize': []
   'mt::win::minimize': []
   'mt::win::set-fullscreen': [flag: boolean]
+  'mt::win::set-title-bar-overlay': [colors: TitleBarOverlayColors]
   'mt::win::toggle-fullscreen': []
   'mt::win::toggle-maximize': []
   'mt::win::unmaximize': []

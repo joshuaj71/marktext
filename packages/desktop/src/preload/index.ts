@@ -16,7 +16,8 @@ import type {
   IpcSyncChannels,
   IpcMainEventChannels,
   BootInfo,
-  SaveDialogRequest
+  SaveDialogRequest,
+  TitleBarOverlayColors
 } from '@shared/types/ipc'
 
 type RendererEventListener<K extends keyof IpcMainEventChannels> = (
@@ -101,6 +102,7 @@ const windowControlAPI = {
   toggleMaximize: () => send('mt::win::toggle-maximize'),
   close: () => send('mt::win::close'),
   setFullScreen: (flag: boolean) => send('mt::win::set-fullscreen', flag),
+  setTitleBarOverlay: (colors: TitleBarOverlayColors) => send('mt::win::set-title-bar-overlay', colors),
   toggleFullScreen: () => send('mt::win::toggle-fullscreen'),
   isMaximized: () => invoke('mt::win::is-maximized'),
   isFullScreen: () => invoke('mt::win::is-fullscreen'),

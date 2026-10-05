@@ -92,7 +92,7 @@
         </el-tooltip>
       </div>
       <div
-        v-if="titleBarStyle === 'custom' && !isFullScreen && !isOsx"
+        v-if="titleBarStyle === 'custom' && !isFullScreen && !isOsx && !isWindows"
         class="right-toolbar"
         :class="[{ 'title-no-drag': titleBarStyle === 'custom' }]"
       >
@@ -155,7 +155,7 @@ import { storeToRefs } from 'pinia'
 import { minimizePath, restorePath, maximizePath, closePath } from '../../assets/window-controls.js'
 import { PATH_SEPARATOR } from '../../config'
 import { APP_PRODUCT_NAME } from 'common/appIdentity'
-import { isMac as isOsxPlatform } from '@/util'
+import { isMac as isOsxPlatform, isWindows } from '@/util'
 import { shouldShowInAppTitleBar, tabsShareTitleBarRow } from './visibility'
 import { useEditorStore } from '@/store/editor'
 import { useI18n } from 'vue-i18n'

@@ -10,7 +10,8 @@ import type {
   IpcMainEventChannels,
   BootInfo,
   PlantumlFetchResult,
-  SaveDialogRequest
+  SaveDialogRequest,
+  TitleBarOverlayColors
 } from '@shared/types/ipc'
 import type { MenuTemplate, MenuPopupPosition } from '@shared/types/menu'
 import type { SerializedStat } from '@shared/types/files'
@@ -77,6 +78,8 @@ declare global {
     toggleMaximize(): void
     close(): void
     setFullScreen(flag: boolean): void
+    /** Recolours the native window controls; ignored by windows without them. */
+    setTitleBarOverlay(colors: TitleBarOverlayColors): void
     toggleFullScreen(): void
     isMaximized(): Promise<boolean>
     isFullScreen(): Promise<boolean>

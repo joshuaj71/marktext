@@ -8,6 +8,10 @@ import {
 } from 'electron'
 import log from 'electron-log'
 import type { MenuTemplate, MenuTemplateItem, MenuPopupPosition } from '@shared/types/menu'
+import type { TitleBarOverlayColors } from '@shared/types/ipc'
+
+const isHexColor = (value: unknown): value is string =>
+  typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value)
 
 const windowFromEvent = (event: IpcMainEvent): BrowserWindow | null =>
   BrowserWindow.fromWebContents(event.sender)
@@ -73,6 +77,15 @@ export const registerWindowHandlers = (): void => {
   ipcMain.on('mt::win::set-fullscreen', (event, flag: boolean) => {
     const win = windowFromEvent(event)
     if (win) win.setFullScreen(!!flag)
+  })
+  ipcMain.on('mt::win::set-title-bar-overlay', (event, colors: TitleBarOverlayColors) => {
+    const win = windowFromEvent(event)
+    if (!win || !isHexColor(colors?.color) || !isHexColor(colors?.symbolColor)) return
+    try {
+      win.setTitleBarOverlay({ color: colors.color, symbolColor: colors.symbolColor })
+    } catch {
+      // A window created without native window controls has none to recolour.
+    }
   })
   ipcMain.on('mt::win::toggle-fullscreen', (event) => {
     const win = windowFromEvent(event)

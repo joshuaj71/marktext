@@ -44,6 +44,7 @@ import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { addStyles, addThemeStyle, addCustomStyle, type AddStylesOptions } from '@/util/theme'
 import { applyAccentColor } from '@/util/accentColor'
+import { syncTitleBarOverlay } from '@/util/titleBarOverlay'
 import Recent from '@/components/recent/index.vue'
 import EditorWithTabs from '@/components/editorWithTabs/index.vue'
 import TitleBar from '@/components/titleBar/index.vue'
@@ -108,6 +109,7 @@ watch(theme, (value, oldValue) => {
   if (value !== oldValue) {
     addThemeStyle(value)
     applyAccentColor(accentColor.value)
+    syncTitleBarOverlay()
   }
 })
 
@@ -120,6 +122,7 @@ watch(customCss, (value, oldValue) => {
     addCustomStyle({
       customCss: value
     })
+    syncTitleBarOverlay()
   }
 })
 
@@ -224,6 +227,7 @@ onMounted(async () => {
     }
     addStyles(style)
     applyAccentColor(accentColor.value)
+    syncTitleBarOverlay()
   })
 })
 </script>

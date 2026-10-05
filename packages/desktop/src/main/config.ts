@@ -76,6 +76,13 @@ export const EXTENSION_HASN: Readonly<{ styledHtml: string; pdf: string }> = Obj
 })
 
 export const TITLE_BAR_HEIGHT: number = isOsx ? 21 : 32
+
+/**
+ * Height, in CSS pixels, of the native window controls Windows draws over the
+ * in-app title bar: the bar's `--titleBarHeight` (renderer/src/assets/styles/
+ * index.css) less its bottom border, which stays visible under the buttons.
+ */
+export const WINDOW_CONTROLS_HEIGHT = 37
 export const LINE_ENDING_REG = /(?:\r\n|\n)/g
 export const LF_LINE_ENDING_REG = /(?:[^\r]\n)|(?:^\n$)/
 export const CRLF_LINE_ENDING_REG = /\r\n/

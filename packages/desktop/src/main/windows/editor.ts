@@ -7,8 +7,9 @@ import { isChildOfDirectory, isSamePathSync } from 'common/filesystem/paths'
 import BaseWindow, { WindowLifecycle, WindowType } from './base'
 import type Accessor from '../app/accessor'
 import { ensureWindowPosition, zoomIn, zoomOut } from './utils'
-import { TITLE_BAR_HEIGHT, editorWinOptions, isOsx } from '../config'
+import { TITLE_BAR_HEIGHT, WINDOW_CONTROLS_HEIGHT, editorWinOptions, isOsx, isWindows } from '../config'
 import { APP_PRODUCT_NAME } from 'common/appIdentity'
+import { isDarkApplicationTheme } from '../app/nativeTheme'
 import { showEditorContextMenu } from '../contextMenu/editor'
 import { loadMarkdownFile } from '../filesystem/markdown'
 import { switchLanguage } from '../spellchecker'
@@ -122,15 +123,27 @@ class EditorWindow extends BaseWindow {
     } = preferences.getAll()
     const resolvedSideBarVisibility = restoreLayoutState ? !!sideBarVisibility : false
 
+    winOptions.backgroundColor = this._getPreferredBackgroundColor(theme)
+
     // Enable native or custom/frameless window and titlebar
     if (!isOsx) {
       winOptions.titleBarStyle = 'default'
       if (titleBarStyle === 'native') {
         winOptions.frame = true
+      } else if (isWindows) {
+        // The system's own caption buttons, drawn over the in-app title bar:
+        // unlike buttons drawn by the page, they offer Windows 11's snap
+        // layouts on hovering maximize. The renderer recolours them to the
+        // theme once its styles are in (mt::win::set-title-bar-overlay).
+        winOptions.frame = true
+        winOptions.titleBarStyle = 'hidden'
+        winOptions.titleBarOverlay = {
+          color: winOptions.backgroundColor,
+          symbolColor: isDarkApplicationTheme(theme) ? '#d4d4d4' : '#3b3b3b',
+          height: WINDOW_CONTROLS_HEIGHT
+        }
       }
     }
-
-    winOptions.backgroundColor = this._getPreferredBackgroundColor(theme)
     if (env.disableSpellcheck) {
       // winOptions.webPreferences is set by editorWinOptions spread above
       ;(winOptions.webPreferences as { spellcheck: boolean }).spellcheck = false

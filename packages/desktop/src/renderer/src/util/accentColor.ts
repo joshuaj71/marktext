@@ -186,7 +186,7 @@ export const buildAccentCss = (
 // Resolves any CSS colour — or a custom property holding one — to the
 // `rgb()`/`rgba()` string the browser computes, so colours written in
 // different notations can be compared.
-const resolveColor = (value: string): string => {
+export const resolveColor = (value: string): string => {
   const probe = document.createElement('span')
   probe.style.color = value
   document.documentElement.appendChild(probe)
@@ -195,7 +195,7 @@ const resolveColor = (value: string): string => {
   return resolved
 }
 
-const rgbStringToHex = (value: string): string | null => {
+export const rgbStringToHex = (value: string): string | null => {
   const channels = value.match(/\d+(\.\d+)?/g)
   if (!channels || channels.length < 3) return null
   return rgbToHex(channels.slice(0, 3).map((channel) => Math.round(Number(channel))) as Rgb)
